@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "lib/typingEngine.js", "components/TypingBox.jsx", "lib/testEngine.js", "app/page.jsx"  ],
   "exclude": ["node_modules"]
 }

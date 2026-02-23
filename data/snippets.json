@@ -1,0 +1,32 @@
+[
+  {
+    "language": "javascript",
+    "topic": "loops",
+    "difficulty": "easy",
+    "code": "for (let i = 0; i < n; i++) {}"
+  },
+  {
+    "language": "javascript",
+    "topic": "arrays",
+    "difficulty": "medium",
+    "code": "const doubled = arr.map(x => x * 2)"
+  },
+  {
+    "language": "python",
+    "topic": "loops",
+    "difficulty": "easy",
+    "code": "for i in range(n): print(i)"
+  },
+  {
+    "language": "cpp",
+    "topic": "conditionals",
+    "difficulty": "medium",
+    "code": "if(x > 10){ cout << x; }"
+  },
+  {
+    "language": "sql",
+    "topic": "queries",
+    "difficulty": "medium",
+    "code": "SELECT name FROM users WHERE age > 18;"
+  }
+]
