@@ -198,52 +198,7 @@ It combines:
 
 ## Author
 
-Major Project by: sans ❤️
+  Project by: sans ❤️
 
 
-typecode/
-│
-├── app/
-│   ├── page.tsx                → homepage
-│   ├── layout.tsx              → global layout
-│   ├── test/
-│   │     └── page.tsx          → typing screen
-│   ├── dashboard/
-│   │     └── page.tsx          → stats screen
-│   └── api/
-│         ├── snippets/
-│         │      route.ts       → fetch snippets
-│         └── stats/
-│                route.ts       → save results
-│
-├── components/
-│   ├── TypingBox.tsx
-│   ├── Caret.tsx
-│   ├── StatsCard.tsx
-│   ├── LanguageSelector.tsx
-│   └── DifficultySelector.tsx
-│
-├── lib/
-│   ├── typingEngine.ts         → logic engine
-│   ├── metrics.ts              → WPM/accuracy
-│   └── snippetLoader.ts
-│
-├── models/
-│   ├── Snippet.ts
-│   └── UserStats.ts
-│
-├── data/
-│   └── snippets.json           → starter dataset
-│
-├── styles/
-│   └── globals.css
-│
-├── public/
-│
-├── utils/
-│   ├── errorAnalysis.ts
-│   └── difficultyScaler.ts
-│
-└── README.md
-
----
+ 
