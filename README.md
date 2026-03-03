@@ -198,7 +198,7 @@ It combines:
 
 ## Author
 
-Major Project by: *[Your Name]*
+  Project by: Sans
 
 ---
 typecode/

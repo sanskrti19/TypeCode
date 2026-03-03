@@ -1,32 +1,1266 @@
 [
   {
+    "id": "js-loop-001",
     "language": "javascript",
-    "topic": "loops",
     "difficulty": "easy",
-    "code": "for (let i = 0; i < n; i++) {}"
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for (let i = 0; i < arr.length; i++) {\n  console.log(arr[i]);\n}"
   },
   {
+    "id": "js-loop-002",
     "language": "javascript",
+    "difficulty": "easy",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "arr.forEach((item) => {\n  console.log(item);\n});"
+  },
+  {
+    "id": "js-loop-003",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for (const item of arr) {\n  console.log(item);\n}"
+  },
+  {
+    "id": "js-loop-004",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "let i = 0;\nwhile (i < n) {\n  i++;\n}"
+  },
+  {
+    "id": "js-loop-005",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for (const [i, val] of arr.entries()) {\n  console.log(i, val);\n}"
+  },
+  {
+    "id": "js-loop-006",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for (const key in obj) {\n  if (obj.hasOwnProperty(key)) {\n    console.log(key, obj[key]);\n  }\n}"
+  },
+  {
+    "id": "js-loop-007",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "let left = 0, right = arr.length - 1;\nwhile (left < right) {\n  [arr[left], arr[right]] = [arr[right], arr[left]];\n  left++;\n  right--;\n}"
+  },
+  {
+    "id": "js-array-001",
+    "language": "javascript",
+    "difficulty": "easy",
     "topic": "arrays",
-    "difficulty": "medium",
-    "code": "const doubled = arr.map(x => x * 2)"
+    "pattern": "array-methods",
+    "code": "const doubled = arr.map(x => x * 2);"
   },
   {
-    "language": "python",
-    "topic": "loops",
+    "id": "js-array-002",
+    "language": "javascript",
     "difficulty": "easy",
-    "code": "for i in range(n): print(i)"
+    "topic": "arrays",
+    "pattern": "array-methods",
+    "code": "const evens = arr.filter(x => x % 2 === 0);"
   },
   {
-    "language": "cpp",
+    "id": "js-array-003",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "arrays",
+    "pattern": "array-methods",
+    "code": "const sum = arr.reduce((acc, val) => acc + val, 0);"
+  },
+  {
+    "id": "js-array-004",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "arrays",
+    "pattern": "array-methods",
+    "code": "const flat = arr.flatMap(x => [x, x * 2]);"
+  },
+  {
+    "id": "js-array-005",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "arrays",
+    "pattern": "array-methods",
+    "code": "const sorted = arr.sort((a, b) => a - b);"
+  },
+  {
+    "id": "js-array-006",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "arrays",
+    "pattern": "array-methods",
+    "code": "const unique = [...new Set(arr)];"
+  },
+  {
+    "id": "js-array-007",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "arrays",
+    "pattern": "array-methods",
+    "code": "const grouped = arr.reduce((acc, item) => {\n  const key = item.category;\n  (acc[key] = acc[key] || []).push(item);\n  return acc;\n}, {});"
+  },
+  {
+    "id": "js-array-008",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "arrays",
+    "pattern": "array-methods",
+    "code": "const result = arr\n  .filter(x => x > 0)\n  .map(x => x * 2)\n  .reduce((sum, x) => sum + x, 0);"
+  },
+  {
+    "id": "js-obj-001",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "objects",
+    "pattern": "destructuring",
+    "code": "const { name, age } = person;"
+  },
+  {
+    "id": "js-obj-002",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "objects",
+    "pattern": "destructuring",
+    "code": "const { a, ...rest } = obj;"
+  },
+  {
+    "id": "js-obj-003",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "objects",
+    "pattern": "destructuring",
+    "code": "const { user: { name, address: { city } } } = data;"
+  },
+  {
+    "id": "js-obj-004",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "objects",
+    "pattern": "spread-rest",
+    "code": "const merged = { ...defaults, ...overrides };"
+  },
+  {
+    "id": "js-obj-005",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "objects",
+    "pattern": "object-methods",
+    "code": "const keys = Object.keys(obj);\nconst values = Object.values(obj);\nconst entries = Object.entries(obj);"
+  },
+  {
+    "id": "js-obj-006",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "objects",
+    "pattern": "object-methods",
+    "code": "const clone = JSON.parse(JSON.stringify(obj));"
+  },
+  {
+    "id": "js-obj-007",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "objects",
+    "pattern": "object-methods",
+    "code": "const frozen = Object.freeze({ ...obj });"
+  },
+  {
+    "id": "js-rec-001",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "recursion",
+    "pattern": "divide-and-conquer",
+    "code": "function factorial(n) {\n  if (n <= 1) return 1;\n  return n * factorial(n - 1);\n}"
+  },
+  {
+    "id": "js-rec-002",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "recursion",
+    "pattern": "divide-and-conquer",
+    "code": "function fib(n) {\n  if (n <= 1) return n;\n  return fib(n - 1) + fib(n - 2);\n}"
+  },
+  {
+    "id": "js-rec-003",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "recursion",
+    "pattern": "tree-traversal",
+    "code": "function deepClone(obj) {\n  if (typeof obj !== 'object' || obj === null) return obj;\n  const clone = Array.isArray(obj) ? [] : {};\n  for (const key in obj) clone[key] = deepClone(obj[key]);\n  return clone;\n}"
+  },
+  {
+    "id": "js-rec-004",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "recursion",
+    "pattern": "divide-and-conquer",
+    "code": "function mergeSort(arr) {\n  if (arr.length <= 1) return arr;\n  const mid = Math.floor(arr.length / 2);\n  const left = mergeSort(arr.slice(0, mid));\n  const right = mergeSort(arr.slice(mid));\n  return merge(left, right);\n}"
+  },
+  {
+    "id": "js-bs-001",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "binary-search",
+    "pattern": "divide-and-conquer",
+    "code": "function binarySearch(arr, target) {\n  let left = 0, right = arr.length - 1;\n  while (left <= right) {\n    const mid = Math.floor((left + right) / 2);\n    if (arr[mid] === target) return mid;\n    if (arr[mid] < target) left = mid + 1;\n    else right = mid - 1;\n  }\n  return -1;\n}"
+  },
+  {
+    "id": "js-bs-002",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "binary-search",
+    "pattern": "divide-and-conquer",
+    "code": "function findFirstOccurrence(arr, target) {\n  let left = 0, right = arr.length - 1, result = -1;\n  while (left <= right) {\n    const mid = Math.floor((left + right) / 2);\n    if (arr[mid] === target) { result = mid; right = mid - 1; }\n    else if (arr[mid] < target) left = mid + 1;\n    else right = mid - 1;\n  }\n  return result;\n}"
+  },
+  {
+    "id": "js-tp-001",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "two-pointers",
+    "pattern": "array-iteration",
+    "code": "while (left < right) {\n  left++;\n  right--;\n}"
+  },
+  {
+    "id": "js-tp-002",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "two-pointers",
+    "pattern": "array-iteration",
+    "code": "function twoSum(arr, target) {\n  let left = 0, right = arr.length - 1;\n  while (left < right) {\n    const sum = arr[left] + arr[right];\n    if (sum === target) return [left, right];\n    if (sum < target) left++;\n    else right--;\n  }\n  return [];\n}"
+  },
+  {
+    "id": "js-sw-001",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "sliding-window",
+    "pattern": "array-iteration",
+    "code": "let max = 0, sum = 0;\nfor (let i = 0; i < k; i++) sum += arr[i];\nmax = sum;\nfor (let i = k; i < arr.length; i++) {\n  sum += arr[i] - arr[i - k];\n  max = Math.max(max, sum);\n}"
+  },
+  {
+    "id": "js-sw-002",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "sliding-window",
+    "pattern": "array-iteration",
+    "code": "function longestSubstringKDistinct(s, k) {\n  const map = {};\n  let left = 0, maxLen = 0;\n  for (let right = 0; right < s.length; right++) {\n    map[s[right]] = (map[s[right]] || 0) + 1;\n    while (Object.keys(map).length > k) {\n      map[s[left]]--;\n      if (map[s[left]] === 0) delete map[s[left]];\n      left++;\n    }\n    maxLen = Math.max(maxLen, right - left + 1);\n  }\n  return maxLen;\n}"
+  },
+  {
+    "id": "js-async-001",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "async",
+    "pattern": "promises",
+    "code": "async function fetchData(url) {\n  const res = await fetch(url);\n  const data = await res.json();\n  return data;\n}"
+  },
+  {
+    "id": "js-async-002",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "async",
+    "pattern": "promises",
+    "code": "async function fetchAll(urls) {\n  const results = await Promise.all(urls.map(url => fetch(url)));\n  return Promise.all(results.map(r => r.json()));\n}"
+  },
+  {
+    "id": "js-async-003",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "async",
+    "pattern": "error-handling",
+    "code": "async function safeCall(fn) {\n  try {\n    const result = await fn();\n    return [null, result];\n  } catch (err) {\n    return [err, null];\n  }\n}"
+  },
+  {
+    "id": "js-async-004",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "async",
+    "pattern": "promises",
+    "code": "async function retry(fn, retries = 3) {\n  for (let i = 0; i < retries; i++) {\n    try {\n      return await fn();\n    } catch (e) {\n      if (i === retries - 1) throw e;\n    }\n  }\n}"
+  },
+  {
+    "id": "js-cls-001",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "classes",
+    "pattern": "oop",
+    "code": "class Animal {\n  constructor(name) {\n    this.name = name;\n  }\n  speak() {\n    return `${this.name} makes a sound.`;\n  }\n}"
+  },
+  {
+    "id": "js-cls-002",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "classes",
+    "pattern": "oop",
+    "code": "class Dog extends Animal {\n  speak() {\n    return `${this.name} barks.`;\n  }\n}"
+  },
+  {
+    "id": "js-cls-003",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "classes",
+    "pattern": "oop",
+    "code": "class EventEmitter {\n  #listeners = {};\n  on(event, cb) { (this.#listeners[event] ||= []).push(cb); }\n  emit(event, ...args) { this.#listeners[event]?.forEach(cb => cb(...args)); }\n}"
+  },
+  {
+    "id": "js-map-001",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "hashmap",
+    "pattern": "frequency-count",
+    "code": "const freq = {};\nfor (const char of str) {\n  freq[char] = (freq[char] || 0) + 1;\n}"
+  },
+  {
+    "id": "js-map-002",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "hashmap",
+    "pattern": "frequency-count",
+    "code": "const map = new Map();\nfor (const num of nums) {\n  map.set(num, (map.get(num) || 0) + 1);\n}"
+  },
+  {
+    "id": "js-map-003",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "hashmap",
+    "pattern": "lookup",
+    "code": "function twoSum(nums, target) {\n  const seen = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const comp = target - nums[i];\n    if (seen.has(comp)) return [seen.get(comp), i];\n    seen.set(nums[i], i);\n  }\n}"
+  },
+  {
+    "id": "js-str-001",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "strings",
+    "pattern": "string-methods",
+    "code": "const reversed = str.split('').reverse().join('');"
+  },
+  {
+    "id": "js-str-002",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "strings",
+    "pattern": "string-methods",
+    "code": "const isPalindrome = str === str.split('').reverse().join('');"
+  },
+  {
+    "id": "js-str-003",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "strings",
+    "pattern": "string-methods",
+    "code": "const words = str.trim().split(/\\s+/);\nconst wordCount = words.length;"
+  },
+  {
+    "id": "js-str-004",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "strings",
+    "pattern": "sliding-window",
+    "code": "function longestUniqueSubstring(s) {\n  const seen = new Map();\n  let left = 0, max = 0;\n  for (let right = 0; right < s.length; right++) {\n    if (seen.has(s[right])) left = Math.max(left, seen.get(s[right]) + 1);\n    seen.set(s[right], right);\n    max = Math.max(max, right - left + 1);\n  }\n  return max;\n}"
+  },
+  {
+    "id": "js-cond-001",
+    "language": "javascript",
+    "difficulty": "easy",
     "topic": "conditionals",
-    "difficulty": "medium",
-    "code": "if(x > 10){ cout << x; }"
+    "pattern": "branching",
+    "code": "const result = condition ? valueIfTrue : valueIfFalse;"
   },
   {
-    "language": "sql",
-    "topic": "queries",
+    "id": "js-cond-002",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "conditionals",
+    "pattern": "branching",
+    "code": "const value = input ?? 'default';"
+  },
+  {
+    "id": "js-cond-003",
+    "language": "javascript",
     "difficulty": "medium",
-    "code": "SELECT name FROM users WHERE age > 18;"
+    "topic": "conditionals",
+    "pattern": "branching",
+    "code": "switch (action.type) {\n  case 'INCREMENT': return state + 1;\n  case 'DECREMENT': return state - 1;\n  default: return state;\n}"
+  },
+  {
+    "id": "js-sort-001",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "sorting",
+    "pattern": "divide-and-conquer",
+    "code": "function quickSort(arr) {\n  if (arr.length <= 1) return arr;\n  const pivot = arr[arr.length - 1];\n  const left = arr.slice(0, -1).filter(x => x <= pivot);\n  const right = arr.slice(0, -1).filter(x => x > pivot);\n  return [...quickSort(left), pivot, ...quickSort(right)];\n}"
+  },
+  {
+    "id": "js-sort-002",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "sorting",
+    "pattern": "comparison",
+    "code": "arr.sort((a, b) => a.name.localeCompare(b.name));"
+  },
+  {
+    "id": "js-graph-001",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "graphs",
+    "pattern": "bfs",
+    "code": "function bfs(graph, start) {\n  const visited = new Set([start]);\n  const queue = [start];\n  while (queue.length) {\n    const node = queue.shift();\n    for (const neighbor of graph[node]) {\n      if (!visited.has(neighbor)) {\n        visited.add(neighbor);\n        queue.push(neighbor);\n      }\n    }\n  }\n}"
+  },
+  {
+    "id": "js-graph-002",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "graphs",
+    "pattern": "dfs",
+    "code": "function dfs(graph, node, visited = new Set()) {\n  visited.add(node);\n  for (const neighbor of graph[node]) {\n    if (!visited.has(neighbor)) dfs(graph, neighbor, visited);\n  }\n  return visited;\n}"
+  },
+  {
+    "id": "js-dp-001",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "dynamic-programming",
+    "pattern": "memoization",
+    "code": "function fib(n, memo = {}) {\n  if (n in memo) return memo[n];\n  if (n <= 1) return n;\n  memo[n] = fib(n - 1, memo) + fib(n - 2, memo);\n  return memo[n];\n}"
+  },
+  {
+    "id": "js-dp-002",
+    "language": "javascript",
+    "difficulty": "hard",
+    "topic": "dynamic-programming",
+    "pattern": "tabulation",
+    "code": "function knapsack(weights, values, capacity) {\n  const dp = Array(capacity + 1).fill(0);\n  for (let i = 0; i < weights.length; i++) {\n    for (let w = capacity; w >= weights[i]; w--) {\n      dp[w] = Math.max(dp[w], dp[w - weights[i]] + values[i]);\n    }\n  }\n  return dp[capacity];\n}"
+  },
+  {
+    "id": "js-stk-001",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "stack",
+    "pattern": "lifo",
+    "code": "const stack = [];\nstack.push(item);\nconst top = stack.pop();"
+  },
+  {
+    "id": "js-stk-002",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "stack",
+    "pattern": "balanced-brackets",
+    "code": "function isValid(s) {\n  const stack = [];\n  const map = { ')': '(', '}': '{', ']': '[' };\n  for (const c of s) {\n    if ('({['.includes(c)) stack.push(c);\n    else if (stack.pop() !== map[c]) return false;\n  }\n  return stack.length === 0;\n}"
+  },
+  {
+    "id": "js-queue-001",
+    "language": "javascript",
+    "difficulty": "easy",
+    "topic": "queue",
+    "pattern": "fifo",
+    "code": "const queue = [];\nqueue.push(item);\nconst front = queue.shift();"
+  },
+  {
+    "id": "js-tree-001",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "trees",
+    "pattern": "tree-traversal",
+    "code": "function inorder(node) {\n  if (!node) return [];\n  return [...inorder(node.left), node.val, ...inorder(node.right)];\n}"
+  },
+  {
+    "id": "js-tree-002",
+    "language": "javascript",
+    "difficulty": "medium",
+    "topic": "trees",
+    "pattern": "tree-traversal",
+    "code": "function levelOrder(root) {\n  if (!root) return [];\n  const result = [], queue = [root];\n  while (queue.length) {\n    const level = [];\n    for (let i = queue.length; i > 0; i--) {\n      const node = queue.shift();\n      level.push(node.val);\n      if (node.left) queue.push(node.left);\n      if (node.right) queue.push(node.right);\n    }\n    result.push(level);\n  }\n  return result;\n}"
+  },
+  {
+    "id": "py-loop-001",
+    "language": "python",
+    "difficulty": "easy",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for i in range(n):\n    print(i)"
+  },
+  {
+    "id": "py-loop-002",
+    "language": "python",
+    "difficulty": "easy",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for i, val in enumerate(arr):\n    print(i, val)"
+  },
+  {
+    "id": "py-loop-003",
+    "language": "python",
+    "difficulty": "easy",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for a, b in zip(list1, list2):\n    print(a, b)"
+  },
+  {
+    "id": "py-loop-004",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for i in range(len(arr) - 1, -1, -1):\n    print(arr[i])"
+  },
+  {
+    "id": "py-loop-005",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "while left < right:\n    if arr[left] + arr[right] == target:\n        return [left, right]\n    elif arr[left] + arr[right] < target:\n        left += 1\n    else:\n        right -= 1"
+  },
+  {
+    "id": "py-lc-001",
+    "language": "python",
+    "difficulty": "easy",
+    "topic": "comprehensions",
+    "pattern": "list-comprehension",
+    "code": "squares = [x ** 2 for x in range(n)]"
+  },
+  {
+    "id": "py-lc-002",
+    "language": "python",
+    "difficulty": "easy",
+    "topic": "comprehensions",
+    "pattern": "list-comprehension",
+    "code": "evens = [x for x in arr if x % 2 == 0]"
+  },
+  {
+    "id": "py-lc-003",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "comprehensions",
+    "pattern": "dict-comprehension",
+    "code": "freq = {char: word.count(char) for char in set(word)}"
+  },
+  {
+    "id": "py-lc-004",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "comprehensions",
+    "pattern": "nested-comprehension",
+    "code": "matrix = [[i * j for j in range(cols)] for i in range(rows)]"
+  },
+  {
+    "id": "py-lc-005",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "comprehensions",
+    "pattern": "set-comprehension",
+    "code": "unique_lengths = {len(word) for word in words if word.isalpha()}"
+  },
+  {
+    "id": "py-str-001",
+    "language": "python",
+    "difficulty": "easy",
+    "topic": "strings",
+    "pattern": "string-methods",
+    "code": "reversed_str = s[::-1]"
+  },
+  {
+    "id": "py-str-002",
+    "language": "python",
+    "difficulty": "easy",
+    "topic": "strings",
+    "pattern": "string-methods",
+    "code": "words = sentence.strip().split()\ncount = len(words)"
+  },
+  {
+    "id": "py-str-003",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "strings",
+    "pattern": "string-methods",
+    "code": "is_palindrome = s == s[::-1]"
+  },
+  {
+    "id": "py-str-004",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "strings",
+    "pattern": "string-methods",
+    "code": "cleaned = ''.join(c.lower() for c in s if c.isalnum())"
+  },
+  {
+    "id": "py-str-005",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "strings",
+    "pattern": "sliding-window",
+    "code": "def length_of_longest_substring(s):\n    seen = {}\n    left = max_len = 0\n    for right, char in enumerate(s):\n        if char in seen:\n            left = max(left, seen[char] + 1)\n        seen[char] = right\n        max_len = max(max_len, right - left + 1)\n    return max_len"
+  },
+  {
+    "id": "py-rec-001",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "recursion",
+    "pattern": "divide-and-conquer",
+    "code": "def factorial(n):\n    return 1 if n <= 1 else n * factorial(n - 1)"
+  },
+  {
+    "id": "py-rec-002",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "recursion",
+    "pattern": "divide-and-conquer",
+    "code": "def fib(n):\n    if n <= 1:\n        return n\n    return fib(n - 1) + fib(n - 2)"
+  },
+  {
+    "id": "py-rec-003",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "recursion",
+    "pattern": "backtracking",
+    "code": "def permutations(arr):\n    if len(arr) <= 1:\n        return [arr]\n    result = []\n    for i, num in enumerate(arr):\n        rest = arr[:i] + arr[i+1:]\n        for p in permutations(rest):\n            result.append([num] + p)\n    return result"
+  },
+  {
+    "id": "py-rec-004",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "recursion",
+    "pattern": "divide-and-conquer",
+    "code": "def merge_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    mid = len(arr) // 2\n    left = merge_sort(arr[:mid])\n    right = merge_sort(arr[mid:])\n    return merge(left, right)"
+  },
+  {
+    "id": "py-bs-001",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "binary-search",
+    "pattern": "divide-and-conquer",
+    "code": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1"
+  },
+  {
+    "id": "py-bs-002",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "binary-search",
+    "pattern": "divide-and-conquer",
+    "code": "def search_rotated(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == target:\n            return mid\n        if arr[left] <= arr[mid]:\n            if arr[left] <= target < arr[mid]:\n                right = mid - 1\n            else:\n                left = mid + 1\n        else:\n            if arr[mid] < target <= arr[right]:\n                left = mid + 1\n            else:\n                right = mid - 1\n    return -1"
+  },
+  {
+    "id": "py-map-001",
+    "language": "python",
+    "difficulty": "easy",
+    "topic": "hashmap",
+    "pattern": "frequency-count",
+    "code": "from collections import Counter\nfreq = Counter(arr)"
+  },
+  {
+    "id": "py-map-002",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "hashmap",
+    "pattern": "frequency-count",
+    "code": "from collections import defaultdict\ngraph = defaultdict(list)\nfor u, v in edges:\n    graph[u].append(v)\n    graph[v].append(u)"
+  },
+  {
+    "id": "py-map-003",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "hashmap",
+    "pattern": "lookup",
+    "code": "def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        comp = target - num\n        if comp in seen:\n            return [seen[comp], i]\n        seen[num] = i"
+  },
+  {
+    "id": "py-dp-001",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "dynamic-programming",
+    "pattern": "memoization",
+    "code": "from functools import lru_cache\n\n@lru_cache(maxsize=None)\ndef fib(n):\n    if n <= 1:\n        return n\n    return fib(n - 1) + fib(n - 2)"
+  },
+  {
+    "id": "py-dp-002",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "dynamic-programming",
+    "pattern": "tabulation",
+    "code": "def longest_common_subsequence(s1, s2):\n    m, n = len(s1), len(s2)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if s1[i-1] == s2[j-1]:\n                dp[i][j] = dp[i-1][j-1] + 1\n            else:\n                dp[i][j] = max(dp[i-1][j], dp[i][j-1])\n    return dp[m][n]"
+  },
+  {
+    "id": "py-graph-001",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "graphs",
+    "pattern": "bfs",
+    "code": "from collections import deque\n\ndef bfs(graph, start):\n    visited = {start}\n    queue = deque([start])\n    while queue:\n        node = queue.popleft()\n        for neighbor in graph[node]:\n            if neighbor not in visited:\n                visited.add(neighbor)\n                queue.append(neighbor)"
+  },
+  {
+    "id": "py-graph-002",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "graphs",
+    "pattern": "dfs",
+    "code": "def dfs(graph, node, visited=None):\n    if visited is None:\n        visited = set()\n    visited.add(node)\n    for neighbor in graph[node]:\n        if neighbor not in visited:\n            dfs(graph, neighbor, visited)\n    return visited"
+  },
+  {
+    "id": "py-cls-001",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "classes",
+    "pattern": "oop",
+    "code": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\n    def speak(self):\n        return f'{self.name} makes a sound'"
+  },
+  {
+    "id": "py-cls-002",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "classes",
+    "pattern": "oop",
+    "code": "class Dog(Animal):\n    def speak(self):\n        return f'{self.name} barks'"
+  },
+  {
+    "id": "py-cls-003",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "classes",
+    "pattern": "oop",
+    "code": "class Stack:\n    def __init__(self):\n        self._items = []\n\n    def push(self, item): self._items.append(item)\n    def pop(self): return self._items.pop()\n    def peek(self): return self._items[-1]\n    def is_empty(self): return not self._items"
+  },
+  {
+    "id": "py-dec-001",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "decorators",
+    "pattern": "higher-order-functions",
+    "code": "def timer(func):\n    import time\n    def wrapper(*args, **kwargs):\n        start = time.time()\n        result = func(*args, **kwargs)\n        print(f'Elapsed: {time.time() - start:.4f}s')\n        return result\n    return wrapper"
+  },
+  {
+    "id": "py-dec-002",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "decorators",
+    "pattern": "higher-order-functions",
+    "code": "def memoize(func):\n    cache = {}\n    def wrapper(*args):\n        if args not in cache:\n            cache[args] = func(*args)\n        return cache[args]\n    return wrapper"
+  },
+  {
+    "id": "py-gen-001",
+    "language": "python",
+    "difficulty": "medium",
+    "topic": "generators",
+    "pattern": "lazy-evaluation",
+    "code": "def fibonacci():\n    a, b = 0, 1\n    while True:\n        yield a\n        a, b = b, a + b"
+  },
+  {
+    "id": "py-gen-002",
+    "language": "python",
+    "difficulty": "hard",
+    "topic": "generators",
+    "pattern": "lazy-evaluation",
+    "code": "def chunked(iterable, size):\n    chunk = []\n    for item in iterable:\n        chunk.append(item)\n        if len(chunk) == size:\n            yield chunk\n            chunk = []\n    if chunk:\n        yield chunk"
+  },
+  {
+    "id": "cpp-loop-001",
+    "language": "cpp",
+    "difficulty": "easy",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for (int i = 0; i < n; i++) {\n    std::cout << arr[i] << std::endl;\n}"
+  },
+  {
+    "id": "cpp-loop-002",
+    "language": "cpp",
+    "difficulty": "easy",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for (const auto& elem : vec) {\n    std::cout << elem << std::endl;\n}"
+  },
+  {
+    "id": "cpp-loop-003",
+    "language": "cpp",
+    "difficulty": "medium",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "int left = 0, right = arr.size() - 1;\nwhile (left < right) {\n    std::swap(arr[left++], arr[right--]);\n}"
+  },
+  {
+    "id": "cpp-ptr-001",
+    "language": "cpp",
+    "difficulty": "medium",
+    "topic": "pointers",
+    "pattern": "memory-management",
+    "code": "int* ptr = new int(42);\nstd::cout << *ptr << std::endl;\ndelete ptr;\nptr = nullptr;"
+  },
+  {
+    "id": "cpp-ptr-002",
+    "language": "cpp",
+    "difficulty": "hard",
+    "topic": "pointers",
+    "pattern": "memory-management",
+    "code": "std::unique_ptr<int[]> arr = std::make_unique<int[]>(n);\nfor (int i = 0; i < n; i++) arr[i] = i;"
+  },
+  {
+    "id": "cpp-ptr-003",
+    "language": "cpp",
+    "difficulty": "hard",
+    "topic": "pointers",
+    "pattern": "memory-management",
+    "code": "void swap(int* a, int* b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}"
+  },
+  {
+    "id": "cpp-stl-001",
+    "language": "cpp",
+    "difficulty": "easy",
+    "topic": "stl",
+    "pattern": "containers",
+    "code": "std::vector<int> vec = {1, 2, 3};\nvec.push_back(4);\nvec.pop_back();"
+  },
+  {
+    "id": "cpp-stl-002",
+    "language": "cpp",
+    "difficulty": "medium",
+    "topic": "stl",
+    "pattern": "containers",
+    "code": "std::map<std::string, int> freq;\nfor (const auto& word : words) freq[word]++;"
+  },
+  {
+    "id": "cpp-stl-003",
+    "language": "cpp",
+    "difficulty": "medium",
+    "topic": "stl",
+    "pattern": "algorithms",
+    "code": "std::sort(vec.begin(), vec.end());\nauto it = std::lower_bound(vec.begin(), vec.end(), target);"
+  },
+  {
+    "id": "cpp-stl-004",
+    "language": "cpp",
+    "difficulty": "hard",
+    "topic": "stl",
+    "pattern": "containers",
+    "code": "std::priority_queue<int, std::vector<int>, std::greater<int>> minHeap;\nminHeap.push(val);\nauto top = minHeap.top();\nminHeap.pop();"
+  },
+  {
+    "id": "cpp-rec-001",
+    "language": "cpp",
+    "difficulty": "medium",
+    "topic": "recursion",
+    "pattern": "divide-and-conquer",
+    "code": "int factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);\n}"
+  },
+  {
+    "id": "cpp-rec-002",
+    "language": "cpp",
+    "difficulty": "hard",
+    "topic": "recursion",
+    "pattern": "divide-and-conquer",
+    "code": "void quickSort(std::vector<int>& arr, int low, int high) {\n    if (low < high) {\n        int pi = partition(arr, low, high);\n        quickSort(arr, low, pi - 1);\n        quickSort(arr, pi + 1, high);\n    }\n}"
+  },
+  {
+    "id": "cpp-cls-001",
+    "language": "cpp",
+    "difficulty": "medium",
+    "topic": "classes",
+    "pattern": "oop",
+    "code": "class Animal {\npublic:\n    std::string name;\n    Animal(std::string n) : name(n) {}\n    virtual std::string speak() { return name + \" makes a sound\"; }\n};"
+  },
+  {
+    "id": "cpp-cls-002",
+    "language": "cpp",
+    "difficulty": "hard",
+    "topic": "classes",
+    "pattern": "oop",
+    "code": "class Stack {\nprivate:\n    std::vector<int> items;\npublic:\n    void push(int x) { items.push_back(x); }\n    void pop() { items.pop_back(); }\n    int top() { return items.back(); }\n    bool empty() { return items.empty(); }\n};"
+  },
+  {
+    "id": "cpp-bs-001",
+    "language": "cpp",
+    "difficulty": "medium",
+    "topic": "binary-search",
+    "pattern": "divide-and-conquer",
+    "code": "int binarySearch(std::vector<int>& arr, int target) {\n    int left = 0, right = arr.size() - 1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (arr[mid] == target) return mid;\n        if (arr[mid] < target) left = mid + 1;\n        else right = mid - 1;\n    }\n    return -1;\n}"
+  },
+  {
+    "id": "cpp-dp-001",
+    "language": "cpp",
+    "difficulty": "hard",
+    "topic": "dynamic-programming",
+    "pattern": "tabulation",
+    "code": "int lcs(std::string s1, std::string s2) {\n    int m = s1.size(), n = s2.size();\n    std::vector<std::vector<int>> dp(m+1, std::vector<int>(n+1, 0));\n    for (int i = 1; i <= m; i++)\n        for (int j = 1; j <= n; j++)\n            dp[i][j] = s1[i-1]==s2[j-1] ? dp[i-1][j-1]+1 : std::max(dp[i-1][j], dp[i][j-1]);\n    return dp[m][n];\n}"
+  },
+  {
+    "id": "cpp-graph-001",
+    "language": "cpp",
+    "difficulty": "medium",
+    "topic": "graphs",
+    "pattern": "bfs",
+    "code": "void bfs(std::vector<std::vector<int>>& graph, int start) {\n    std::vector<bool> visited(graph.size(), false);\n    std::queue<int> q;\n    visited[start] = true;\n    q.push(start);\n    while (!q.empty()) {\n        int node = q.front(); q.pop();\n        for (int neighbor : graph[node])\n            if (!visited[neighbor]) { visited[neighbor] = true; q.push(neighbor); }\n    }\n}"
+  },
+  {
+    "id": "cpp-str-001",
+    "language": "cpp",
+    "difficulty": "easy",
+    "topic": "strings",
+    "pattern": "string-methods",
+    "code": "std::string s = \"hello\";\nstd::reverse(s.begin(), s.end());"
+  },
+  {
+    "id": "cpp-str-002",
+    "language": "cpp",
+    "difficulty": "medium",
+    "topic": "strings",
+    "pattern": "string-methods",
+    "code": "bool isPalindrome(const std::string& s) {\n    int left = 0, right = s.size() - 1;\n    while (left < right)\n        if (s[left++] != s[right--]) return false;\n    return true;\n}"
+  },
+  {
+    "id": "sql-sel-001",
+    "language": "sql",
+    "difficulty": "easy",
+    "topic": "select",
+    "pattern": "basic-query",
+    "code": "SELECT name, age\nFROM users\nWHERE active = 1\nORDER BY age DESC;"
+  },
+  {
+    "id": "sql-sel-002",
+    "language": "sql",
+    "difficulty": "easy",
+    "topic": "select",
+    "pattern": "basic-query",
+    "code": "SELECT DISTINCT department\nFROM employees\nWHERE salary > 50000;"
+  },
+  {
+    "id": "sql-sel-003",
+    "language": "sql",
+    "difficulty": "medium",
+    "topic": "select",
+    "pattern": "basic-query",
+    "code": "SELECT *\nFROM orders\nWHERE created_at BETWEEN '2024-01-01' AND '2024-12-31'\nAND status = 'completed'\nLIMIT 100;"
+  },
+  {
+    "id": "sql-join-001",
+    "language": "sql",
+    "difficulty": "medium",
+    "topic": "joins",
+    "pattern": "joins",
+    "code": "SELECT u.name, o.amount\nFROM users u\nINNER JOIN orders o ON u.id = o.user_id\nWHERE o.amount > 100;"
+  },
+  {
+    "id": "sql-join-002",
+    "language": "sql",
+    "difficulty": "medium",
+    "topic": "joins",
+    "pattern": "joins",
+    "code": "SELECT u.name, COUNT(o.id) AS order_count\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id\nGROUP BY u.id, u.name;"
+  },
+  {
+    "id": "sql-join-003",
+    "language": "sql",
+    "difficulty": "hard",
+    "topic": "joins",
+    "pattern": "joins",
+    "code": "SELECT a.name, b.name, r.relationship\nFROM users a\nJOIN relationships r ON a.id = r.user_a\nJOIN users b ON b.id = r.user_b;"
+  },
+  {
+    "id": "sql-agg-001",
+    "language": "sql",
+    "difficulty": "easy",
+    "topic": "aggregates",
+    "pattern": "aggregate-functions",
+    "code": "SELECT\n    COUNT(*) AS total,\n    AVG(salary) AS avg_salary,\n    MAX(salary) AS max_salary\nFROM employees;"
+  },
+  {
+    "id": "sql-agg-002",
+    "language": "sql",
+    "difficulty": "medium",
+    "topic": "aggregates",
+    "pattern": "aggregate-functions",
+    "code": "SELECT department, COUNT(*) AS headcount, AVG(salary) AS avg_pay\nFROM employees\nGROUP BY department\nHAVING COUNT(*) > 5\nORDER BY avg_pay DESC;"
+  },
+  {
+    "id": "sql-agg-003",
+    "language": "sql",
+    "difficulty": "hard",
+    "topic": "aggregates",
+    "pattern": "window-functions",
+    "code": "SELECT\n    name,\n    salary,\n    RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS salary_rank\nFROM employees;"
+  },
+  {
+    "id": "sql-sub-001",
+    "language": "sql",
+    "difficulty": "medium",
+    "topic": "subqueries",
+    "pattern": "subquery",
+    "code": "SELECT name, salary\nFROM employees\nWHERE salary > (\n    SELECT AVG(salary)\n    FROM employees\n);"
+  },
+  {
+    "id": "sql-sub-002",
+    "language": "sql",
+    "difficulty": "hard",
+    "topic": "subqueries",
+    "pattern": "subquery",
+    "code": "SELECT u.name\nFROM users u\nWHERE EXISTS (\n    SELECT 1\n    FROM orders o\n    WHERE o.user_id = u.id\n    AND o.amount > 1000\n);"
+  },
+  {
+    "id": "sql-sub-003",
+    "language": "sql",
+    "difficulty": "hard",
+    "topic": "subqueries",
+    "pattern": "cte",
+    "code": "WITH ranked AS (\n    SELECT *, ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC) AS rn\n    FROM employees\n)\nSELECT * FROM ranked WHERE rn = 1;"
+  },
+  {
+    "id": "sql-ddl-001",
+    "language": "sql",
+    "difficulty": "easy",
+    "topic": "ddl",
+    "pattern": "table-creation",
+    "code": "CREATE TABLE users (\n    id INT PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(100) NOT NULL,\n    email VARCHAR(255) UNIQUE NOT NULL,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);"
+  },
+  {
+    "id": "sql-ddl-002",
+    "language": "sql",
+    "difficulty": "medium",
+    "topic": "ddl",
+    "pattern": "constraints",
+    "code": "CREATE TABLE orders (\n    id INT PRIMARY KEY,\n    user_id INT NOT NULL,\n    amount DECIMAL(10, 2) CHECK (amount > 0),\n    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE\n);"
+  },
+  {
+    "id": "sql-dml-001",
+    "language": "sql",
+    "difficulty": "easy",
+    "topic": "dml",
+    "pattern": "crud",
+    "code": "INSERT INTO users (name, email)\nVALUES ('Alice', 'alice@example.com');"
+  },
+  {
+    "id": "sql-dml-002",
+    "language": "sql",
+    "difficulty": "easy",
+    "topic": "dml",
+    "pattern": "crud",
+    "code": "UPDATE users\nSET email = 'newemail@example.com'\nWHERE id = 42;"
+  },
+  {
+    "id": "sql-dml-003",
+    "language": "sql",
+    "difficulty": "medium",
+    "topic": "dml",
+    "pattern": "crud",
+    "code": "INSERT INTO users (name, email)\nVALUES ('Bob', 'bob@example.com')\nON CONFLICT (email)\nDO UPDATE SET name = EXCLUDED.name;"
+  },
+  {
+    "id": "sql-idx-001",
+    "language": "sql",
+    "difficulty": "medium",
+    "topic": "indexes",
+    "pattern": "performance",
+    "code": "CREATE INDEX idx_users_email ON users(email);\nCREATE COMPOSITE INDEX idx_orders ON orders(user_id, created_at);"
+  },
+  {
+    "id": "sql-win-001",
+    "language": "sql",
+    "difficulty": "hard",
+    "topic": "window-functions",
+    "pattern": "window-functions",
+    "code": "SELECT\n    name,\n    salary,\n    LAG(salary) OVER (ORDER BY hire_date) AS prev_salary,\n    LEAD(salary) OVER (ORDER BY hire_date) AS next_salary\nFROM employees;"
+  },
+  {
+    "id": "sql-win-002",
+    "language": "sql",
+    "difficulty": "hard",
+    "topic": "window-functions",
+    "pattern": "window-functions",
+    "code": "SELECT\n    name,\n    SUM(sales) OVER (PARTITION BY region ORDER BY month ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_total\nFROM sales_data;"
+  },
+  {
+    "id": "ts-type-001",
+    "language": "typescript",
+    "difficulty": "easy",
+    "topic": "types",
+    "pattern": "type-annotation",
+    "code": "type User = {\n    id: number;\n    name: string;\n    email: string;\n    isActive?: boolean;\n};"
+  },
+  {
+    "id": "ts-type-002",
+    "language": "typescript",
+    "difficulty": "medium",
+    "topic": "types",
+    "pattern": "union-types",
+    "code": "type Result<T> =\n    | { success: true; data: T }\n    | { success: false; error: string };"
+  },
+  {
+    "id": "ts-type-003",
+    "language": "typescript",
+    "difficulty": "hard",
+    "topic": "types",
+    "pattern": "generics",
+    "code": "function groupBy<T, K extends keyof T>(arr: T[], key: K): Record<string, T[]> {\n    return arr.reduce((acc, item) => {\n        const group = String(item[key]);\n        (acc[group] = acc[group] || []).push(item);\n        return acc;\n    }, {} as Record<string, T[]>);\n}"
+  },
+  {
+    "id": "ts-gen-001",
+    "language": "typescript",
+    "difficulty": "medium",
+    "topic": "generics",
+    "pattern": "generic-functions",
+    "code": "function identity<T>(value: T): T {\n    return value;\n}"
+  },
+  {
+    "id": "ts-gen-002",
+    "language": "typescript",
+    "difficulty": "hard",
+    "topic": "generics",
+    "pattern": "generic-constraints",
+    "code": "function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {\n    return obj[key];\n}"
+  },
+  {
+    "id": "ts-util-001",
+    "language": "typescript",
+    "difficulty": "medium",
+    "topic": "utility-types",
+    "pattern": "mapped-types",
+    "code": "type PartialUser = Partial<User>;\ntype ReadonlyUser = Readonly<User>;\ntype UserPreview = Pick<User, 'id' | 'name'>;\ntype UserWithoutId = Omit<User, 'id'>;"
+  },
+  {
+    "id": "ts-util-002",
+    "language": "typescript",
+    "difficulty": "hard",
+    "topic": "utility-types",
+    "pattern": "conditional-types",
+    "code": "type NonNullable<T> = T extends null | undefined ? never : T;\ntype ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : never;"
+  },
+  {
+    "id": "ts-interface-001",
+    "language": "typescript",
+    "difficulty": "medium",
+    "topic": "interfaces",
+    "pattern": "oop",
+    "code": "interface Repository<T> {\n    findById(id: number): Promise<T | null>;\n    findAll(): Promise<T[]>;\n    save(entity: T): Promise<T>;\n    delete(id: number): Promise<void>;\n}"
+  },
+  {
+    "id": "ts-async-001",
+    "language": "typescript",
+    "difficulty": "medium",
+    "topic": "async",
+    "pattern": "promises",
+    "code": "async function fetchUser(id: number): Promise<User> {\n    const res = await fetch(`/api/users/${id}`);\n    if (!res.ok) throw new Error('User not found');\n    return res.json() as Promise<User>;\n}"
+  },
+  {
+    "id": "ts-async-002",
+    "language": "typescript",
+    "difficulty": "hard",
+    "topic": "async",
+    "pattern": "error-handling",
+    "code": "async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {\n    const timeout = new Promise<never>((_, reject) =>\n        setTimeout(() => reject(new Error('Timeout')), ms)\n    );\n    return Promise.race([promise, timeout]);\n}"
+  },
+  {
+    "id": "ts-dec-001",
+    "language": "typescript",
+    "difficulty": "hard",
+    "topic": "decorators",
+    "pattern": "meta-programming",
+    "code": "function Log(target: any, key: string, descriptor: PropertyDescriptor) {\n    const original = descriptor.value;\n    descriptor.value = function (...args: any[]) {\n        console.log(`Calling ${key} with`, args);\n        return original.apply(this, args);\n    };\n    return descriptor;\n}"
+  },
+  {
+    "id": "java-loop-001",
+    "language": "java",
+    "difficulty": "easy",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for (int i = 0; i < arr.length; i++) {\n    System.out.println(arr[i]);\n}"
+  },
+  {
+    "id": "java-loop-002",
+    "language": "java",
+    "difficulty": "easy",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "for (int item : list) {\n    System.out.println(item);\n}"
+  },
+  {
+    "id": "java-loop-003",
+    "language": "java",
+    "difficulty": "medium",
+    "topic": "loops",
+    "pattern": "iteration",
+    "code": "Iterator<String> it = list.iterator();\nwhile (it.hasNext()) {\n    String item = it.next();\n    if (condition) it.remove();\n}"
+  },
+  {
+    "id": "java-cls-001",
+    "language": "java",
+    "difficulty": "medium",
+    "topic": "classes",
+    "pattern": "oop",
+    "code": "public class Animal {\n    private String name;\n\n    public Animal(String name) {\n        this.name = name;\n    }\n\n    public String speak() {\n        return name + \" makes a sound\";\n    }\n}"
+  },
+  {
+    "id": "java-cls-002",
+    "language": "java",
+    "difficulty": "hard",
+    "topic": "classes",
+    "pattern": "oop",
+    "code": "public class Singleton {\n    private static Singleton instance;\n\n    private Singleton() {}\n\n    public static synchronized Singleton getInstance() {\n        if (instance == null) instance = new Singleton();\n        return instance;\n    }\n}"
+  },
+  {
+    "id": "java-coll-001",
+    "language": "java",
+    "difficulty": "easy",
+    "topic": "collections",
+    "pattern": "list",
+    "code": "List<String> list = new ArrayList<>();\nlist.add(\"Alice\");\nlist.add(\"Bob\");\nCollections.sort(list);"
+  },
+  {
+    "id": "java-coll-002",
+    "language": "java",
+    "difficulty": "medium",
+    "topic": "collections",
+    "pattern": "map",
+    "code": "Map<String, Integer> freq = new HashMap<>();\nfor (String word : words) {\n    freq.put(word, freq.getOrDefault(word, 0) + 1);\n}"
+  },
+  {
+    "id": "java-coll-003",
+    "language": "java",
+    "difficulty": "hard",
+    "topic": "collections",
+    "pattern": "priority-queue",
+    "code": "PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> a[0] - b[0]);\nminHeap.offer(new int[]{val, idx});\nint[] top = minHeap.poll();"
+  },
+  {
+    "id": "java-stream-001",
+    "language": "java",
+    "difficulty": "medium",
+    "topic": "streams",
+    "pattern": "functional",
+    "code": "List<String> result = list.stream()\n    .filter(s -> s.startsWith(\"A\"))\n    .map(String::toUpperCase)\n    .collect(Collectors.toList());"
+  },
+  {
+    "id": "java-stream-002",
+    "language": "java",
+    "difficulty": "hard",
+    "topic": "streams",
+    "pattern": "functional",
+    "code": "Map<String, Long> freq = words.stream()\n    .collect(Collectors.groupingBy(\n        Function.identity(),\n        Collectors.counting()\n    ));"
+  },
+  {
+    "id": "java-rec-001",
+    "language": "java",
+    "difficulty": "medium",
+    "topic": "recursion",
+    "pattern": "divide-and-conquer",
+    "code": "public int factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);\n}"
+  },
+  {
+    "id": "java-bs-001",
+    "language": "java",
+    "difficulty": "medium",
+    "topic": "binary-search",
+    "pattern": "divide-and-conquer",
+    "code": "public int binarySearch(int[] arr, int target) {\n    int left = 0, right = arr.length - 1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (arr[mid] == target) return mid;\n        if (arr[mid] < target) left = mid + 1;\n        else right = mid - 1;\n    }\n    return -1;\n}"
+  },
+  {
+    "id": "java-dp-001",
+    "language": "java",
+    "difficulty": "hard",
+    "topic": "dynamic-programming",
+    "pattern": "tabulation",
+    "code": "public int coinChange(int[] coins, int amount) {\n    int[] dp = new int[amount + 1];\n    Arrays.fill(dp, amount + 1);\n    dp[0] = 0;\n    for (int coin : coins)\n        for (int i = coin; i <= amount; i++)\n            dp[i] = Math.min(dp[i], dp[i - coin] + 1);\n    return dp[amount] > amount ? -1 : dp[amount];\n}"
   }
 ]
