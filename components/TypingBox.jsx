@@ -1,3 +1,4 @@
+ 
 "use client"
 
 import { useEffect, useRef, useState } from "react"
@@ -9,107 +10,109 @@ import snippets from "@/data/snippets.json"
 export default function TypingBox() {
   const [language, setLanguage] = useState("javascript")
   const [difficulty, setDifficulty] = useState("easy")
+  const [topic, setTopic] = useState("binary-search")
+  const [pattern, setPattern] = useState("divide-and-conquer")
+  const [mode, setMode] = useState("practice")
+
   const [text, setText] = useState(null)
   const engineRef = useRef(null)
   const [state, setState] = useState(null)
+
   const [stats, setStats] = useState({ wpm: 0, accuracy: 100, time: 0 })
   const [timeLeft, setTimeLeft] = useState(30)
   const [isRunning, setIsRunning] = useState(false)
-  const [lastTypedIndex, setLastTypedIndex] = useState(null)
   const [finished, setFinished] = useState(false)
+
   const [scores, setScores] = useState([])
- const best = Math.max(...scores.map(s=>s.wpm))
- const [topic, setTopic] = useState("binary-search")
- const [pattern, setPattern] = useState("divide-and-conquer")
- const [mode, setMode] = useState("practice")
 
- const availablePatterns = [
-  ...new Set(
-    snippets
-      .filter(s => s.topic === topic)
-      .map(s => s.pattern)
-  )
-]
+  const best = scores.length
+    ? Math.max(...scores.map((s) => s.wpm))
+    : 0
+
+  const availablePatterns = [
+    ...new Set(
+      snippets
+        .filter((s) => s.topic === topic)
+        .map((s) => s.pattern)
+    )
+  ]
+
+  const backgroundClass =
+    mode === "competitive"
+      ? "from-zinc-950 via-zinc-900 to-red-950"
+      : "from-black via-zinc-900 to-black"
+
   const resetTest = () => {
-    setFinished(false)
+    const snippet = getRandomSnippet({
+      language,
+      difficulty,
+      topic,
+      pattern
+    })
 
-   const snippet = getRandomSnippet({ language, difficulty, topic, pattern })
     const engine = createTypingEngine(snippet)
     engineRef.current = engine
 
-    setTimeLeft(30)
-    setIsRunning(false)
     setText(snippet)
     setState(engine.getState())
     setStats({ wpm: 0, accuracy: 100, time: 0 })
+    setTimeLeft(30)
+    setIsRunning(false)
+    setFinished(false)
   }
-const backgroundClass =
-  mode === "competitive"
-    ? "from-black via-red-900 to-black"
-    : "from-black via-zinc-900 to-black"
 
-
-
+  // Load new snippet when filters change
   useEffect(() => {
-    const snippet = getRandomSnippet({ language, difficulty })
-    setText(snippet)
-
-    const engine = createTypingEngine(snippet)
-    engineRef.current = engine
-    setState(engine.getState())
+    resetTest()
   }, [language, difficulty, topic, pattern])
 
+  // Load leaderboard
   useEffect(() => {
-  async function load() {
-    const data = await getScores()
-    setScores(data)
-  }
-  load()
-}, [finished])
+    async function load() {
+      const data = await getScores()
+      setScores(data)
+    }
+    load()
+  }, [finished])
 
-useEffect(() => {
-  if (mode !== "competitive") return
-  if (!isRunning) return
-
-  if (timeLeft <= 0) {
-    setFinished(true)
-
-    saveScore({
-      wpm: stats.wpm,
-      accuracy: stats.accuracy,
-      date: new Date().toLocaleString()
-    })
-
-    return
-  }
-
-  const timer = setTimeout(() => {
-    setTimeLeft(t => t - 1)
-  }, 1000)
-
-  return () => clearTimeout(timer)
-}, [isRunning, timeLeft, mode])
-
-
-
-
+  // Competitive timer
   useEffect(() => {
-    if (lastTypedIndex === null) return
+    if (mode !== "competitive") return
+    if (!isRunning) return
+    if (finished) return
+
+    if (timeLeft <= 0) {
+      setFinished(true)
+
+      saveScore({
+        wpm: stats.wpm,
+        accuracy: stats.accuracy,
+        date: new Date().toLocaleString()
+      })
+
+      return
+    }
 
     const timer = setTimeout(() => {
-      setLastTypedIndex(null)
-    }, 120)
+      setTimeLeft((t) => t - 1)
+    }, 1000)
 
     return () => clearTimeout(timer)
-  }, [lastTypedIndex])
+  }, [isRunning, timeLeft, mode, finished, stats])
 
+  // Reset timer if switching to practice
+  useEffect(() => {
+    if (mode === "practice") {
+      setTimeLeft(30)
+    }
+  }, [mode])
+
+  // Keyboard handler
   useEffect(() => {
     if (!engineRef.current) return
 
     const handleKey = (e) => {
       if (finished) return
-
-      if (!isRunning) setIsRunning(true)
 
       if (e.key === "Escape") {
         resetTest()
@@ -124,24 +127,27 @@ useEffect(() => {
       }
 
       if (e.key.length === 1) {
+        if (!isRunning) setIsRunning(true)
+
         const newState = engineRef.current.type(e.key)
         setState(newState)
         setStats(engineRef.current.getStats())
-        setLastTypedIndex(newState.index - 1)
       }
     }
 
     window.addEventListener("keydown", handleKey)
     return () => window.removeEventListener("keydown", handleKey)
-  }, [text, finished, isRunning])
+  }, [finished, isRunning])
 
   if (!state) return null
 
   const progress =
     state.text.length > 0
-      ? (state.input.length / state.text.length) * 100
+      ? Math.min(
+          (state.input.length / state.text.length) * 100,
+          100
+        )
       : 0
-
 
  return (
   <main
