@@ -1,9 +1,8 @@
- 
 "use client"
 
 import { useEffect, useRef, useState } from "react"
 import { createTypingEngine } from "@/lib/typingEngine"
-import { getRandomSnippet } from "@/lib/getSnippet"
+// import { getRandomSnippet } from "@/lib/getSnippet"
 import { saveScore, getScores } from "@/lib/leaderboard"
 import snippets from "@/data/snippets.json"
 
@@ -42,13 +41,19 @@ export default function TypingBox() {
       ? "from-zinc-950 via-zinc-900 to-red-950"
       : "from-black via-zinc-900 to-black"
 
+ 
   const resetTest = () => {
-    const snippet = getRandomSnippet({
+    let snippet = getRandomSnippet({
       language,
       difficulty,
       topic,
       pattern
     })
+
+  
+    if (!snippet) {
+      snippet = snippets[Math.floor(Math.random() * snippets.length)].code
+    }
 
     const engine = createTypingEngine(snippet)
     engineRef.current = engine
@@ -75,7 +80,7 @@ export default function TypingBox() {
     load()
   }, [finished])
 
-  // Competitive timer
+  // Competitive timer effect
   useEffect(() => {
     if (mode !== "competitive") return
     if (!isRunning) return
@@ -100,10 +105,12 @@ export default function TypingBox() {
     return () => clearTimeout(timer)
   }, [isRunning, timeLeft, mode, finished, stats])
 
-  // Reset timer if switching to practice
+  // Reset timer if switching to practice mode
   useEffect(() => {
     if (mode === "practice") {
       setTimeLeft(30)
+      setIsRunning(false)
+      setFinished(false)
     }
   }, [mode])
 
@@ -148,6 +155,7 @@ export default function TypingBox() {
           100
         )
       : 0
+
 
  return (
   <main
