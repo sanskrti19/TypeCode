@@ -1,0 +1,17 @@
+{
+  "language": "cpp",
+  "difficulty": "hard",
+  "total": 100,
+  "snippets": [
+    { "id": 1, "code": "int fact(int n){return n<=1?1:n*fact(n-1);}" },
+    { "id": 2, "code": "int fib(int n){return n<2?n:fib(n-1)+fib(n-2);}" },
+    { "id": 3, "code": "int gcd(int a,int b){return b?gcd(b,a%b):a;}" },
+    { "id": 4, "code": "int lcm(int a,int b){return a*b/gcd(a,b);}" },
+    { "id": 5, "code": "vector<int> v={1,2,3};" },
+    { "id": 6, "code": "sort(v.begin(),v.end());" },
+    { "id": 7, "code": "reverse(v.begin(),v.end());" },
+    { "id": 8, "code": "accumulate(v.begin(),v.end(),0);" },
+    { "id": 9, "code": "count(v.begin(),v.end(),2);" },
+    { "id": 10, "code": "binary_search(v.begin(),v.end(),2);" }
+  ]
+}

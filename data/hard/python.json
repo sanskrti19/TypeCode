@@ -1,0 +1,27 @@
+{
+  "language": "python",
+  "difficulty": "hard",
+  "total": 100,
+  "snippets": [
+    { "id": 1, "code": "def fact(n): return 1 if n<=1 else n*fact(n-1)" },
+    { "id": 2, "code": "def fib(n): return n if n<2 else fib(n-1)+fib(n-2)" },
+    { "id": 3, "code": "memo={}; f=lambda x:memo.setdefault(x,x*x)" },
+    { "id": 4, "code": "from functools import reduce" },
+    { "id": 5, "code": "sum([i for i in range(100)])" },
+    { "id": 6, "code": "list(map(lambda x:x*2,[1,2,3]))" },
+    { "id": 7, "code": "list(filter(lambda x:x>2,[1,2,3,4]))" },
+    { "id": 8, "code": "reduce(lambda a,b:a+b,[1,2,3])" },
+    { "id": 9, "code": "import itertools; list(itertools.permutations('abc'))" },
+    { "id": 10, "code": "import itertools; list(itertools.combinations([1,2,3],2))" },
+    { "id": 11, "code": "sorted([3,1,2])" },
+    { "id": 12, "code": "sum(i*i for i in range(10))" },
+    { "id": 13, "code": "any([0,1,0])" },
+    { "id": 14, "code": "all([1,1,1])" },
+    { "id": 15, "code": "max([1,5,2])" },
+    { "id": 16, "code": "min([1,5,2])" },
+    { "id": 17, "code": "import heapq; heapq.nlargest(2,[1,5,3,2])" },
+    { "id": 18, "code": "import heapq; heapq.nsmallest(2,[1,5,3,2])" },
+    { "id": 19, "code": "def gcd(a,b): return a if b==0 else gcd(b,a%b)" },
+    { "id": 20, "code": "def lcm(a,b): return a*b//gcd(a,b)" }
+  ]
+}

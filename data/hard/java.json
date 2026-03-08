@@ -1,0 +1,17 @@
+{
+  "language": "java",
+  "difficulty": "hard",
+  "total": 100,
+  "snippets": [
+    { "id": 1, "code": "int fact(int n){return n<=1?1:n*fact(n-1);}" },
+    { "id": 2, "code": "int fib(int n){return n<2?n:fib(n-1)+fib(n-2);}" },
+    { "id": 3, "code": "int gcd(int a,int b){return b==0?a:gcd(b,a%b);}" },
+    { "id": 4, "code": "int lcm(int a,int b){return a*b/gcd(a,b);}" },
+    { "id": 5, "code": "List<Integer> list=Arrays.asList(1,2,3);" },
+    { "id": 6, "code": "Collections.sort(list);" },
+    { "id": 7, "code": "Collections.reverse(list);" },
+    { "id": 8, "code": "list.stream().map(x->x*2);" },
+    { "id": 9, "code": "list.stream().filter(x->x>2);" },
+    { "id": 10, "code": "list.stream().reduce(0,Integer::sum);" }
+  ]
+}
