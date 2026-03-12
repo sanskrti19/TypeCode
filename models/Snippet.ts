@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+ 
 
 export type Language = "javascript" | "python" | "cpp" | "sql" | "typescript" | "java";
 export type Difficulty = "easy" | "medium" | "hard";
@@ -12,15 +12,15 @@ export interface ISnippet extends Document {
   topic: string;
   pattern: string;
   code: string;
-  charCount: number;   // pre-computed, used in WPM calculations
+  charCount: number;    
   lineCount: number;
-  timesPlayed: number; // incremented each session
-  isActive: boolean;   // lets you soft-disable snippets without deleting
+  timesPlayed: number;  
+  isActive: boolean;    
   createdAt: Date;
   updatedAt: Date;
 }
 
-// ─── Schema ───────────────────────────────────────────────────────────────────
+ 
 
 const SnippetSchema = new Schema<ISnippet>(
   {
@@ -38,11 +38,11 @@ const SnippetSchema = new Schema<ISnippet>(
   { timestamps: true }
 );
 
-// Compound index — covers your most common filter: language + difficulty + topic
+ 
 SnippetSchema.index({ language: 1, difficulty: 1, topic: 1 });
 SnippetSchema.index({ language: 1, topic: 1 });
 
-// ─── Model (safe for Next.js hot reload) ─────────────────────────────────────
+ 
 
 const Snippet: Model<ISnippet> =
   mongoose.models.Snippet || mongoose.model<ISnippet>("Snippet", SnippetSchema);
