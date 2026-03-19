@@ -1,11 +1,13 @@
-import { Request, Response } from "express"
-import PracticeActivity from "../models/PracticeActivity"
-import { qualifiesForStreak } from "../utils/streakUtils"
+import PracticeActivity from "@/models/PracticeActivity"
+import { qualifiesForStreak } from "@/utils/streakUtils"
 
-export const logPractice = async (req: Request, res: Response) => {
+export const logPractice = async (req: Request) => {
 
-  const userId = (req as any).user.id
-  const { solved, time } = req.body
+  const body = await req.json()
+  const { solved, time } = body
+
+  // ⚠️ TEMP user (replace later with auth)
+  const userId = "dummyUserId"
 
   const today = new Date().toISOString().split("T")[0]
 
@@ -27,23 +29,22 @@ export const logPractice = async (req: Request, res: Response) => {
 
   await activity.save()
 
-  res.json(activity)
+  return Response.json(activity)
 }
 
 
 
-export const getMonthlyActivity = async (req: Request, res: Response) => {
+export const getMonthlyActivity = async (req: Request) => {
 
-  const userId = (req as any).user.id
-  const { month } = req.query
+  const { searchParams } = new URL(req.url)
+  const month = searchParams.get("month")
+
+  const userId = "dummyUserId"
 
   const activities = await PracticeActivity.find({
     userId,
     date: { $regex: `^${month}` }
   })
 
-  res.json(activities)
+  return Response.json(activities)
 }
- 
-
- 
