@@ -54,21 +54,21 @@ export function useSnippet(filters: SnippetFilters = {}) {
     }
   }, [filters.language, filters.difficulty, filters.topic])
 
-  // Fetch on mount and whenever filters change
+ 
   useEffect(() => {
     fetchSnippet()
   }, [fetchSnippet])
 
   return {
-    snippet,          // full snippet object
-    code: snippet?.code ?? "",  // just the code string (matches your old return value)
+    snippet,           
+    code: snippet?.code ?? "",   
     loading,
     error,
-    refresh: fetchSnippet,  // call this to load a new random snippet
+    refresh: fetchSnippet,   
   }
 }
 
-// ─── Standalone fetch (for non-component code / server actions) ───────────────
+ 
 
 export async function getRandomSnippet(filters: SnippetFilters = {}): Promise<string> {
   const params = new URLSearchParams()
