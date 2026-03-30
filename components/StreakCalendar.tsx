@@ -9,9 +9,10 @@ export default function StreakCalendar() {
   const [streak, setStreak] = useState(0)
   const [dailyCount, setDailyCount] = useState<Record<string, number>>({})
 
-  const formatDate = (date: Date) => date.toDateString()
+  // ✅ FIXED: consistent format
+  const formatDate = (date: Date) =>
+    date.toISOString().slice(0, 10)
 
-   
   useEffect(() => {
 
     const update = () => {
@@ -22,14 +23,14 @@ export default function StreakCalendar() {
 
     update()
 
-    
-    const interval = setInterval(update, 1000)
+    // ❌ REMOVED interval (stop polling every second like a maniac)
 
-   
+    // ✅ listen for manual updates
+    window.addEventListener("streakUpdated", update)
     window.addEventListener("focus", update)
 
     return () => {
-      clearInterval(interval)
+      window.removeEventListener("streakUpdated", update)
       window.removeEventListener("focus", update)
     }
 
@@ -56,7 +57,6 @@ export default function StreakCalendar() {
   return (
     <div className="bg-zinc-900 p-6 rounded-xl text-white">
 
-      
       <div className="flex justify-between items-center mb-4">
         <button onClick={prevMonth}>←</button>
 
@@ -67,12 +67,10 @@ export default function StreakCalendar() {
         <button onClick={nextMonth}>→</button>
       </div>
 
-   
       <div className="mt-4 text-sm text-center">
         🔥 Current Streak: {streak}
       </div>
 
-     
       <div className="grid grid-cols-7 gap-2 mt-4">
 
         {Array.from({ length: daysInMonth }, (_, i) => {
@@ -85,7 +83,7 @@ export default function StreakCalendar() {
           )
 
           const dateStr = formatDate(dateObj)
- 
+
           const isActive = (dailyCount[dateStr] || 0) >= 3
 
           return (
