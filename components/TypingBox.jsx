@@ -53,6 +53,18 @@ export default function TypingBox() {
     console.log("FINISH TEST CALLED")
   }
 
+  const createRoom = async () => {
+  const res = await fetch("/api/rooms", {
+    method: "POST"
+  });
+
+  const data = await res.json();
+
+  if (data.roomId) {
+    window.location.href = `/room/${data.roomId}`;
+  }
+};
+
   const resetTest = () => {
     const snippet = getSnippet()
 
