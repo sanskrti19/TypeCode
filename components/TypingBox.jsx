@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { saveScore } from "@/lib/leaderboard"
 import ResultModal from "./ResultModal"
 
-export default function TypingBox() {
+export default function TypingBox({ roomId }) {
 
   const [language, setLanguage] = useState("javascript")
   const [difficulty, setDifficulty] = useState("easy")
@@ -133,7 +133,7 @@ export default function TypingBox() {
 
   }, [finished, isRunning, input, text])
 
-  // STATS + FINISH
+   
   useEffect(() => {
 
     if (!startTime) return
@@ -174,25 +174,38 @@ export default function TypingBox() {
         <div className="w-full flex justify-between items-center px-12 py-6 border-b border-zinc-800">
           <h1 className="text-2xl text-zinc-200">TypeCode</h1>
 
-          <div className="flex items-center gap-4">
+           <div className="flex items-center gap-4">
 
-            <select value={language} onChange={(e)=>setLanguage(e.target.value)} className="bg-zinc-800 px-4 py-2 rounded">
-              <option value="javascript">JavaScript</option>
-              <option value="python">Python</option>
-              <option value="cpp">C++</option>
-              <option value="java">Java</option>
-            </select>
+  <select value={language} onChange={(e)=>setLanguage(e.target.value)} className="bg-zinc-800 px-4 py-2 rounded">
+    <option value="javascript">JavaScript</option>
+    <option value="python">Python</option>
+    <option value="cpp">C++</option>
+    <option value="java">Java</option>
+  </select>
 
-            <select value={difficulty} onChange={(e)=>setDifficulty(e.target.value)} className="bg-zinc-800 px-4 py-2 rounded">
-              <option value="easy">Easy</option>
-              <option value="hard">Hard</option>
-            </select>
+  <select value={difficulty} onChange={(e)=>setDifficulty(e.target.value)} className="bg-zinc-800 px-4 py-2 rounded">
+    <option value="easy">Easy</option>
+    <option value="hard">Hard</option>
+  </select>
 
-            <button onClick={resetTest} className="px-4 py-2 bg-zinc-900 rounded">
-              Restart
-            </button>
+  <button
+    onClick={resetTest}
+    className="px-4 py-2 bg-zinc-900 rounded"
+  >
+    Restart
+  </button>
 
-          </div>
+  <button
+    onClick={createRoom}
+    className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded"
+  >
+    Create Room
+  </button>
+
+</div>
+
+
+
         </div>
 
         <div className="flex justify-center mt-10 text-xl text-zinc-500">
@@ -236,7 +249,7 @@ export default function TypingBox() {
 
       </main>
 
-      {/* ✅ FIXED MODAL PLACEMENT */}
+ 
       {showResult && (
         <ResultModal
           stats={stats}
