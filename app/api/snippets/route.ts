@@ -1,7 +1,7 @@
  
 
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
+ 
 import Snippet from "@/models/Snippet";
  
 async function getDailyChallenge(filter: object) {
@@ -24,7 +24,7 @@ async function getRandom(filter: object, count: number) {
 
 export async function GET(req: NextRequest) {
   try {
-    await connectDB();
+     
 
     const { searchParams } = req.nextUrl;
 

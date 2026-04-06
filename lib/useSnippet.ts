@@ -23,49 +23,30 @@ export interface SnippetFilters {
   difficulty?: Difficulty
   topic?: string
 }
-
-// ─── Hook ─────────────────────────────────────────────────────────────────────
-
-export function useSnippet(filters: SnippetFilters = {}) {
-  const [snippet, setSnippet] = useState<Snippet | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchSnippet = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      // Build query string from filters
-      const params = new URLSearchParams()
-      if (filters.language)   params.set("language",   filters.language)
-      if (filters.difficulty) params.set("difficulty", filters.difficulty)
-      if (filters.topic)      params.set("topic",      filters.topic)
-
-      const res = await fetch(`/api/snippets?${params.toString()}`)
-      if (!res.ok) throw new Error("Failed to fetch snippet")
-
-      const data = await res.json()
-      setSnippet(data)
-    } catch (err) {
-      setError("Could not load snippet. Please try again.")
-    } finally {
-      setLoading(false)
-    }
-  }, [filters.language, filters.difficulty, filters.topic])
-
  
+
+const snippets = [
+  "function binarySearch(arr,target){ return arr.indexOf(target) }",
+  "def binary_search(arr,target): return arr.index(target)",
+  "for(let i=0;i<arr.length;i++){ console.log(arr[i]) }"
+];
+
+export function useSnippet() {
+  const [code, setCode] = useState("");
+
+  const getSnippet = () => {
+    const random = snippets[Math.floor(Math.random() * snippets.length)];
+    setCode(random);
+  };
+
   useEffect(() => {
-    fetchSnippet()
-  }, [fetchSnippet])
+    getSnippet();
+  }, []);
 
   return {
-    snippet,           
-    code: snippet?.code ?? "",   
-    loading,
-    error,
-    refresh: fetchSnippet,   
-  }
+    code,
+    refresh: getSnippet
+  };
 }
 
  

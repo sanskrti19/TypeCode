@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { saveScore } from "@/lib/leaderboard"
 import ResultModal from "./ResultModal"
 
-export default function TypingBox({ roomId }) {
+export default function TypingBox({ roomId , socket}) {
 
   const [language, setLanguage] = useState("javascript")
   const [difficulty, setDifficulty] = useState("easy")
@@ -36,14 +36,35 @@ export default function TypingBox({ roomId }) {
   }
 
   const finishTest = () => {
-    if (finished) return
+  if (finished) return;
 
-    console.log("FINISHED TRIGGERED")  
+  console.log("FINISHED TRIGGERED");
 
-    setFinished(true)
-    setIsRunning(false)
-    setShowResult(true)
+  setFinished(true);
+  setIsRunning(false);
+  setShowResult(true);
 
+  if (roomId && socket) {
+    socket.emit("submit-score", {
+      roomId,
+      username: "Guest",
+      wpm: stats.wpm,
+      accuracy: stats.accuracy
+    });
+  } else {
+    saveScore({
+      wpm: stats.wpm,
+      accuracy: stats.accuracy
+    });
+  }
+};
+
+
+ 
+
+
+ 
+ 
     saveScore({
       wpm: stats.wpm,
       accuracy: stats.accuracy
@@ -51,19 +72,44 @@ export default function TypingBox({ roomId }) {
     })
     console.log("CALLING updateStreak")
     console.log("FINISH TEST CALLED")
+  
+const createRoom = async () => {
+  const existingRoom = localStorage.getItem("roomId")
+
+  if (existingRoom) {
+    const confirmNew = confirm("You already have a room. Create a new one?")
+    if (!confirmNew) {
+      window.location.href = `/room/${existingRoom}`
+      return
+    }
   }
 
-  const createRoom = async () => {
-  const res = await fetch("/api/rooms", {
-    method: "POST"
-  });
+  const res = await fetch("/api/rooms", { method: "POST" })
 
-  const data = await res.json();
+if (!res.ok) {
+  throw new Error("Failed to create room")
+}
 
-  if (data.roomId) {
-    window.location.href = `/room/${data.roomId}`;
+const data = await res.json()
+  
+
+  localStorage.setItem("roomId", data.roomId)
+
+  window.location.href = `/room/${data.roomId}`
+}
+
+const [roomLink, setRoomLink] = useState("")
+
+useEffect(() => {
+  if (roomId) {
+    setRoomLink(`${window.location.origin}/room/${roomId}`)
   }
-};
+}, [roomId])
+
+const copyLink = () => {
+  if (!roomLink) return
+  navigator.clipboard.writeText(roomLink)
+}
 
   const resetTest = () => {
     const snippet = getSnippet()
@@ -82,7 +128,7 @@ export default function TypingBox({ roomId }) {
 
   useEffect(() => {
     resetTest()
-  }, [language, difficulty])
+  }, [ language,  difficulty])
  
   useEffect(() => {
     if (!isRunning || finished) return
@@ -98,8 +144,7 @@ export default function TypingBox({ roomId }) {
 
     return () => clearTimeout(timer)
   }, [isRunning, timeLeft, finished])
-
-  // KEY INPUT
+ 
   useEffect(() => {
     const handleKey = (e) => {
 
@@ -169,6 +214,12 @@ export default function TypingBox({ roomId }) {
 
   return (
     <>
+{roomId && (
+  <div>
+    <p>{roomLink}</p>
+    <button onClick={copyLink}>Copy Link</button>
+  </div>
+)}
       <main className="min-h-screen w-full bg-black text-white font-mono flex flex-col">
 
         <div className="w-full flex justify-between items-center px-12 py-6 border-b border-zinc-800">
@@ -211,6 +262,8 @@ export default function TypingBox({ roomId }) {
         <div className="flex justify-center mt-10 text-xl text-zinc-500">
           {timeLeft}
         </div>
+
+       
 
         <div className="text-2xl leading-relaxed max-w-5xl mx-auto mt-10 text-center">
 
