@@ -74,29 +74,24 @@ export default function TypingBox({ roomId , socket}) {
     console.log("FINISH TEST CALLED")
   
 const createRoom = async () => {
-  const existingRoom = localStorage.getItem("roomId")
+  const existingRoom = localStorage.getItem("roomId");
 
   if (existingRoom) {
-    const confirmNew = confirm("You already have a room. Create a new one?")
+    const confirmNew = confirm("You already have a room. Create a new one?");
+    
     if (!confirmNew) {
-      window.location.href = `/room/${existingRoom}`
-      return
+      window.location.href = `/room/${existingRoom}`;
+      return;
     }
   }
 
-  const res = await fetch("/api/rooms", { method: "POST" })
+  const res = await fetch("/api/rooms", { method: "POST" });
+  const data = await res.json();
 
-if (!res.ok) {
-  throw new Error("Failed to create room")
-}
+  localStorage.setItem("roomId", data.roomId);
 
-const data = await res.json()
-  
-
-  localStorage.setItem("roomId", data.roomId)
-
-  window.location.href = `/room/${data.roomId}`
-}
+  window.location.href = `/room/${data.roomId}`;
+};
 
 const [roomLink, setRoomLink] = useState("")
 
@@ -252,7 +247,14 @@ const copyLink = () => {
   >
     Create Room
   </button>
-
+<button
+  onClick={() => {
+    const room = localStorage.getItem("roomId");
+    if (room) window.location.href = `/room/${room}`;
+  }}
+>
+  Rejoin Room
+</button>
 </div>
 
 

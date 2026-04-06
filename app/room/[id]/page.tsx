@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { io } from "socket.io-client";
 import TypingBox from "@/components/TypingBox";
+import { useParams } from "next/navigation";
 
 export default function RoomPage() {
-  const { roomId } = useParams();
+  const params = useParams();
+  const roomId = params.id;
 
   const [participants, setParticipants] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
@@ -16,8 +17,11 @@ export default function RoomPage() {
     const init = async () => {
       await fetch("/api/socket");
 
-      const s = io();
-      setSocket(s);
+      const s = io({
+        path: "/api/socket",
+      });
+
+      setSocket(s); //  
 
       let username = localStorage.getItem("username");
 
@@ -35,8 +39,10 @@ export default function RoomPage() {
     init();
 
     return () => {
-      socket?.off("room-users");
-      socket?.off("leaderboard");
+      if (socket) {
+        socket.off("room-users");
+        socket.off("leaderboard");
+      }
     };
   }, [roomId]);
 
@@ -49,14 +55,14 @@ export default function RoomPage() {
       <TypingBox roomId={roomId} socket={socket} />
 
       <h2>Participants</h2>
-      {participants.map((p) => (
-        <div key={p.id}>{p.username}</div>
+      {participants.map((p, i) => (
+        <div key={i}>{p.username}</div>
       ))}
 
       <h2 className="mt-4">Leaderboard</h2>
       {leaderboard.map((l, i) => (
         <div key={i}>
-          {l.username} - {l.wpm} WPM
+          {l.username} - {l.wpm} WPM - {l.accuracy}%
         </div>
       ))}
     </div>
