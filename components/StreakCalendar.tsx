@@ -71,7 +71,9 @@ export default function StreakCalendar() {
         🔥 Current Streak: {streak}
       </div>
 
-      <div className="grid grid-cols-7 gap-2 mt-4">
+      <div className="grid grid-cols-2 gap-6">
+
+      
 
         {Array.from({ length: daysInMonth }, (_, i) => {
           const day = i + 1

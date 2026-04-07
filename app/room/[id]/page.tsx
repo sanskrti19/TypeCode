@@ -4,55 +4,77 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import TypingBox from "@/components/TypingBox";
 import { useParams } from "next/navigation";
+import { Socket } from "socket.io-client";
+
+
 
 export default function RoomPage() {
   const params = useParams();
-  const roomId = params.id;
+   const roomId = Array.isArray(params?.id) ? params.id[0] : params?.id;
 
-  const [participants, setParticipants] = useState([]);
-  const [leaderboard, setLeaderboard] = useState([]);
-  const [socket, setSocket] = useState(null);
+   const [participants, setParticipants] = useState<{ id: string; username: string }[]>([]);
+   const [leaderboard, setLeaderboard] = useState<{
+       username: string;
+       wpm: number;
+       accuracy: number;
+       }[]>([]);
+  
+  
+  const [socket, setSocket] = useState<Socket | null>(null);
 
-  useEffect(() => {
-    const init = async () => {
-      await fetch("/api/socket");
+   useEffect(() => {
+  let s;
 
-      const s = io({
-        path: "/api/socket",
-      });
+  const init = async () => {
+    await fetch("/api/socket");
 
-      setSocket(s); //  
+    s = io({ path: "/api/socket" });
 
-      let username = localStorage.getItem("username");
+    setSocket(s);
 
-      if (!username) {
-        username = prompt("Enter your name") || "Guest";
-        localStorage.setItem("username", username);
-      }
+    let username = localStorage.getItem("username") || "Guest";
 
-      s.emit("join-room", { roomId, username });
+    if (!username) {
+      username = prompt("Enter your name") || "Guest";
+      localStorage.setItem("username", username);
+    }
 
-      s.on("room-users", setParticipants);
-      s.on("leaderboard", setLeaderboard);
-    };
+    if (!roomId) return;
 
-    init();
+    s.emit("join-room", { roomId, username });
 
-    return () => {
-      if (socket) {
-        socket.off("room-users");
-        socket.off("leaderboard");
-      }
-    };
-  }, [roomId]);
+    s.on("room-users", setParticipants);
+    s.on("leaderboard", setLeaderboard);
+  };
+
+  init();
+
+  return () => {
+    if (s) {
+      s.off("room-users");
+      s.off("leaderboard");
+      s.disconnect();
+    }
+  };
+}, [roomId]);
+     
+
+     
 
   if (!socket) return null;
 
   return (
     <div className="p-6">
       <h1>Room: {roomId}</h1>
+      // @ts-ignore
+      <TypingBox
+      roomId={roomId}
+       socket={socket}
+      participants={participants}
+       leaderboard={leaderboard}
+/>
 
-      <TypingBox roomId={roomId} socket={socket} />
+       
 
       <h2>Participants</h2>
       {participants.map((p, i) => (
@@ -60,11 +82,12 @@ export default function RoomPage() {
       ))}
 
       <h2 className="mt-4">Leaderboard</h2>
-      {leaderboard.map((l, i) => (
-        <div key={i}>
-          {l.username} - {l.wpm} WPM - {l.accuracy}%
-        </div>
-      ))}
+      {leaderboard?.map((l, i) => (
+  <p key={i} className="text-sm text-zinc-400">
+    {i + 1}. {l.username} - {l.wpm} WPM ({l.accuracy}%)
+  </p>
+))}
+      
     </div>
   );
 }

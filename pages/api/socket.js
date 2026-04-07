@@ -11,68 +11,92 @@ export default function handler(req, res) {
     res.socket.server.io = io;
 
     const rooms = {};
+    const ROOM_TTL = 5 * 60 * 60 * 1000;
+
+    // 🧹 Cleanup inactive rooms
+    setInterval(() => {
+      const now = Date.now();
+
+      Object.keys(rooms).forEach((roomId) => {
+        const room = rooms[roomId];
+
+        if (!room.lastActive) return;
+
+        if (now - room.lastActive > ROOM_TTL) {
+          delete rooms[roomId];
+          console.log("🧹 Room deleted:", roomId);
+        }
+      });
+    }, 60000);
 
     io.on("connection", (socket) => {
       console.log("⚡ User connected:", socket.id);
 
+      // ✅ JOIN ROOM
       socket.on("join-room", ({ roomId, username }) => {
         socket.join(roomId);
+
+        socket.username = username;
+        socket.roomId = roomId;
 
         if (!rooms[roomId]) {
           rooms[roomId] = {
             users: [],
             scores: [],
+            lastActive: Date.now(),
           };
         }
 
-        rooms[roomId].users.push({
-          id: socket.id,
-          username,
-        });
+        // prevent duplicate users
+        const exists = rooms[roomId].users.find(
+          (u) => u.id === socket.id
+        );
+
+        if (!exists) {
+          rooms[roomId].users.push({
+            id: socket.id,
+            username,
+          });
+        }
+
+        rooms[roomId].lastActive = Date.now();
 
         io.to(roomId).emit("room-users", rooms[roomId].users);
       });
 
+      // ✅ SUBMIT SCORE (ALL ATTEMPTS STORED)
       socket.on("submit-score", ({ roomId, username, wpm, accuracy }) => {
         if (!rooms[roomId]) return;
 
-        const existing = rooms[roomId].scores.find(
-         (s) => s.username === username
-        );
+        rooms[roomId].scores.push({
+          username,
+          wpm,
+          accuracy,
+          time: Date.now(),
+        });
 
-        if (!existing) {
+        rooms[roomId].lastActive = Date.now();
 
-          rooms[roomId].scores.push({ username, wpm, accuracy });
-                } else {
-   
-             if (accuracy > existing.accuracy) {
-         existing.wpm = wpm;
-             existing.accuracy = accuracy;
-           }
-        }
         const sorted = rooms[roomId].scores.sort(
-        (a, b) => b.accuracy - a.accuracy
+          (a, b) => b.wpm - a.wpm
         );
-
-        
 
         io.to(roomId).emit("leaderboard", sorted);
       });
 
+      // ❌ DISCONNECT
       socket.on("disconnect", () => {
         console.log("❌ Disconnected:", socket.id);
 
-        Object.keys(rooms).forEach((roomId) => {
-          rooms[roomId].users = rooms[roomId].users.filter(
-            (u) => u.id !== socket.id
-          );
-          rooms[roomId].users.push({
-         id: socket.id,
-         username,
-        });
+        const roomId = socket.roomId;
 
-          io.to(roomId).emit("room-users", rooms[roomId].users);
-        });
+        if (!roomId || !rooms[roomId]) return;
+
+        rooms[roomId].users = rooms[roomId].users.filter(
+          (u) => u.id !== socket.id
+        );
+
+        io.to(roomId).emit("room-users", rooms[roomId].users);
       });
     });
   }
