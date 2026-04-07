@@ -23,7 +23,7 @@ export default function RoomPage() {
   const [socket, setSocket] = useState<Socket | null>(null);
 
    useEffect(() => {
-  let s;
+  let s:Socket;
 
   const init = async () => {
     await fetch("/api/socket");
