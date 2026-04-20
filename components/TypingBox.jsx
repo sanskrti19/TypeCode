@@ -7,8 +7,6 @@ import ResultModal from "./ResultModal"
  export default function TypingBox({ roomId , socket,  participants,
   leaderboard}) {
   
-  
-
   const [language, setLanguage] = useState("javascript")
   const [difficulty, setDifficulty] = useState("easy")
   const [wpmHistory, setWpmHistory] = useState([])
@@ -41,7 +39,7 @@ const [username, setUsername] = useState("");
   const getSnippet = () => {
     return snippets[Math.floor(Math.random() * snippets.length)]
   }
-const name = localStorage.getItem("username") || "Guest";
+
 
 socket.emit("submit-score", {
   roomId,
@@ -51,14 +49,18 @@ socket.emit("submit-score", {
 });
  
 
-const finishTest = () => {
+ const finishTest = () => {
   if (finished) return;
 
   setFinished(true);
   setIsRunning(false);
   setShowResult(true);
 
-  const name = localStorage.getItem("username") || "Guest";
+  let name = "Guest";
+
+  if (typeof window !== "undefined") {
+    name = localStorage.getItem("username") || "Guest";
+  }
 
   if (roomId && socket) {
     socket.emit("submit-score", {
