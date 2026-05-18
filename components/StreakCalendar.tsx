@@ -8,8 +8,7 @@ export default function StreakCalendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [streak, setStreak] = useState(0)
   const [dailyCount, setDailyCount] = useState<Record<string, number>>({})
-
-  // ✅ FIXED: consistent format
+ 
   const formatDate = (date: Date) =>
     date.toISOString().slice(0, 10)
 
@@ -22,10 +21,7 @@ export default function StreakCalendar() {
     }
 
     update()
-
-    // ❌ REMOVED interval (stop polling every second like a maniac)
-
-    // ✅ listen for manual updates
+ 
     window.addEventListener("streakUpdated", update)
     window.addEventListener("focus", update)
 
@@ -55,51 +51,87 @@ export default function StreakCalendar() {
   }
 
   return (
-    <div className="bg-zinc-900 p-6 rounded-xl text-white">
 
-      <div className="flex justify-between items-center mb-4">
-        <button onClick={prevMonth}>←</button>
+ <div className="bg-zinc-900/90 p-5 rounded-2xl 
+ text-white w-72 border border-zinc-800 shadow-lg fixed bottom-8 right-16 z-50 ">
 
-        <span className="font-semibold">
-          {currentMonth.toLocaleString("default", { month: "long" })}
-        </span>
+  <div className="flex justify-between items-center mb-3">
 
-        <button onClick={nextMonth}>→</button>
+    <button
+      onClick={prevMonth}
+      className="text-zinc-400"
+    >
+      ←
+    </button>
+
+    <span className="font-semibold text-sm">
+      {currentMonth.toLocaleString(
+        "default",
+        {month:"short"}
+      )}
+    </span>
+
+    <button
+      onClick={nextMonth}
+      className="text-zinc-400"
+    >
+      →
+    </button>
+
+  </div>
+
+  <div className="text-sm font-medium text-center mb-4">
+    🔥 {streak} Day Streak
+  </div>
+
+  <div className="grid grid-cols-7 gap-2">
+
+    {Array.from(
+      {length:daysInMonth},
+      (_,i)=>{
+
+      const day=i+1
+
+      const dateObj=
+      new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth(),
+        day
+      )
+
+      const dateStr=
+      formatDate(dateObj)
+
+      const isActive=
+      (dailyCount[dateStr]||0)>=3
+
+      return(
+
+      <div
+      key={day}
+      className={`
+      w-8 h-8 text-xs
+      flex items-center justify-center
+      rounded-md
+      ${
+      isActive
+      ? "bg-orange-500/20"
+      : "bg-zinc-800"
+      }
+      `}
+      >
+
+      {isActive?"🔥":""}
+
       </div>
 
-      <div className="mt-4 text-sm text-center">
-        🔥 Current Streak: {streak}
-      </div>
+      )
 
-      <div className="grid grid-cols-2 gap-6">
+    })}
 
-      
+  </div>
 
-        {Array.from({ length: daysInMonth }, (_, i) => {
-          const day = i + 1
+</div>
 
-          const dateObj = new Date(
-            currentMonth.getFullYear(),
-            currentMonth.getMonth(),
-            day
-          )
-
-          const dateStr = formatDate(dateObj)
-
-          const isActive = (dailyCount[dateStr] || 0) >= 3
-
-          return (
-            <div
-              key={day}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-800"
-            >
-              {isActive ? "🔥" : ""}
-            </div>
-          )
-        })}
-
-      </div>
-
-    </div>
-  )
+)
 }

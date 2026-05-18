@@ -1,23 +1,31 @@
-let scores = []
+import {connectDB} from "@/lib/mongodb";
+import Score from "@/models/Score";
 
-export async function GET() {
-  return Response.json(scores)
+export async function GET(){
+
+ await connectDB();
+
+ const scores=
+ await Score
+ .find()
+ .sort({wpm:-1})
+ .limit(10);
+
+ return Response.json(scores);
+
 }
 
-export async function POST(req) {
-  const body = await req.json()
+export async function POST(req){
 
-  const newScore = {
-    wpm: body.wpm,
-    accuracy: body.accuracy,
-    date: new Date().toLocaleString()
-  }
+ await connectDB();
 
-  scores.push(newScore)
+ const body=
+ await req.json();
 
-  scores = scores
-    .sort((a, b) => b.wpm - a.wpm)
-    .slice(0, 10)
+ await Score.create(body);
 
-  return Response.json({ success: true })
+ return Response.json({
+ success:true
+ });
+
 }

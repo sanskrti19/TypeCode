@@ -13,9 +13,11 @@ export default function Home() {
         </div>
 
          
-        <div className="w-[320px] sticky top-100 h-fit">
-          <StreakCalendar />
-        </div>
+         
+
+             
+           <StreakCalendar/>
+           
 
       </div>
 

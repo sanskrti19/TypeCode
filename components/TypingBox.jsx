@@ -1,12 +1,14 @@
 "use client"
+ 
 
-import { useEffect, useState } from "react"
+ import { useEffect, useState, useRef } from "react"
 import { saveScore } from "@/lib/leaderboard"
 import ResultModal from "./ResultModal"
  
  export default function TypingBox({ roomId , socket,  participants,
   leaderboard}) {
-  
+  const hasSubmitted = useRef(false);
+  const [activeRoom,setActiveRoom]=useState(null)
   const [language, setLanguage] = useState("javascript")
   const [difficulty, setDifficulty] = useState("easy")
   const [wpmHistory, setWpmHistory] = useState([])
@@ -29,7 +31,7 @@ const [username, setUsername] = useState("");
   const [isRunning, setIsRunning] = useState(false)
   const [finished, setFinished] = useState(false)
   const [startTime, setStartTime] = useState(null)
-
+ const [leaderboardData,setLeaderboard]=useState([]);
   const snippets = [
     "function binarySearch(arr,target){ return arr.indexOf(target) }",
     "def binary_search(arr,target): return arr.index(target)",
@@ -39,100 +41,179 @@ const [username, setUsername] = useState("");
   const getSnippet = () => {
     return snippets[Math.floor(Math.random() * snippets.length)]
   }
+ const finishTest = async()=>{
 
+if(hasSubmitted.current)
+return;
 
-socket.emit("submit-score", {
-  roomId,
-  username: name,
-  wpm: stats.wpm,
-  accuracy: stats.accuracy
-});
+hasSubmitted.current=true;
+
+if(finished) return;
+const name =
+localStorage.getItem(
+"username"
+);
+
  
 
- const finishTest = () => {
-  if (finished) return;
+try{
 
-  setFinished(true);
-  setIsRunning(false);
-  setShowResult(true);
+await fetch(
+"/api/score",
+{
 
-  let name = "Guest";
+method:"POST",
 
-  if (typeof window !== "undefined") {
-    name = localStorage.getItem("username") || "Guest";
-  }
+headers:{
+"Content-Type":
+"application/json"
+},
 
-  if (roomId && socket) {
-    socket.emit("submit-score", {
-      roomId,
-      username: name,
-      wpm: stats.wpm,
-      accuracy: stats.accuracy
-    });
-  } else {
-    saveScore({
-      wpm: stats.wpm,
-      accuracy: stats.accuracy
-    });
-  }
+body:JSON.stringify({
+
+username:name,
+
+wpm:stats.wpm,
+
+accuracy:stats.accuracy
+
+})
+
+}
+
+);
+
+}catch(error){
+
+console.log(error);
+
+}
+
+setFinished(true);
+
+setIsRunning(false);
+
+setShowResult(true);
+
+if(roomId && socket){
+
+socket.emit(
+"submit-score",
+{
+roomId,
+username:name,
+wpm:stats.wpm,
+accuracy:stats.accuracy
+}
+);
+
+}
+
+}
+useEffect(()=>{
+
+setActiveRoom(
+localStorage.getItem("activeRoom")
+)
+
+},[]) 
+
+
+ useEffect(()=>{
+
+const getLeaderboard=
+async()=>{
+
+const res=
+await fetch(
+"/api/leaderboard"
+);
+
+const data=
+await res.json();
+
+setLeaderboard(data);
+
 };
 
- 
+getLeaderboard();
 
-
- 
- 
-    saveScore({
-      wpm: stats.wpm,
-      accuracy: stats.accuracy
-      
-    })
-    console.log("CALLING updateStreak")
-    console.log("FINISH TEST CALLED")
-  
+},[]);
 const createRoom = async () => {
 
-  const username = localStorage.getItem("username") || "Guest";
+  if (!localStorage.getItem("username")) {
+    setShowNameInput(true);
+    return;
+  }
 
-const newRoom = {
-  id: roomId,
-  name: `${username}'s Room`,
-};
-  const existingRoom = localStorage.getItem("roomId");
+  const username =
+    localStorage.getItem("username");
+
+  const existingRoom =
+    localStorage.getItem("activeRoom");
 
   if (existingRoom) {
-    const confirmNew = confirm("You already have a room. Create a new one?");
-    
+
+    const confirmNew = confirm(
+      "You already have a room. Create a new one?"
+    );
+
     if (!confirmNew) {
-      window.location.href = `/room/${existingRoom}`;
+
+      window.location.href =
+      `/room/${existingRoom}`;
+
       return;
     }
   }
 
-  const res = await fetch("/api/rooms", { method: "POST" });
-  const data = await res.json();
+  const res =
+    await fetch("/api/rooms",{
+      method:"POST"
+    });
 
-   const saveRoom = (roomId) => {
-  const rooms = JSON.parse(localStorage.getItem("rooms") || "[]");
+  const data =
+    await res.json();
 
-  const exists = rooms.find(r => r.id === roomId);
-  if (exists) return;
-
+  const rooms =
+    JSON.parse(
+      localStorage.getItem("rooms")
+      || "[]"
+    );
 
   const newRoom = {
-    id: roomId,
-     name: `${username}'s Room`,
+
+    id:data.roomId,
+
+    name:
+    `${username}'s Room`
+
   };
-  localStorage.setItem("rooms", JSON.stringify([newRoom, ...rooms]));
 
-  const updated = [newRoom, ...rooms];
+  const exists =
+    rooms.find(
+      r=>r.id===data.roomId
+    );
 
-  
+  if(!exists){
+
+    localStorage.setItem("rooms", JSON.stringify(
+      [newRoom,...rooms]
+      )
+
+    );
+
+  }
+
+  localStorage.setItem(
+    "activeRoom",
+    data.roomId
+  );
+
+  window.location.href =
+  `/room/${data.roomId}`;
+
 };
-
-  window.location.href = `/room/${data.roomId}`;
-};
-
 const [roomLink, setRoomLink] = useState("")
 
 
@@ -155,6 +236,7 @@ useEffect(() => {
 };
 
   const resetTest = () => {
+    hasSubmitted.current=false;
     const snippet = getSnippet()
 
     setText(snippet)
@@ -282,21 +364,28 @@ useEffect(() => {
          <button
   className="w-full bg-green-600 py-2 rounded"
   onClick={() => {
-    const finalName = username || "Guest";
+   const finalName =
+username.trim();
 
-    localStorage.setItem("username", finalName);
-    setShowNameInput(false);
+if(!finalName){
 
-    if (socket && roomId) {
-  const name = localStorage.getItem("username") || "Guest";
+alert(
+"Enter your name"
+);
 
-  socket.emit("submit-score", {
-    roomId,
-    username: name,
-    wpm: stats.wpm,
-    accuracy: stats.accuracy
-  });
+return;
+
 }
+
+localStorage.setItem(
+"username",
+finalName
+);
+
+setShowNameInput(false);
+    setShowNameInput(false);
+ 
+ 
   }}
 >
   Join Room
@@ -305,12 +394,15 @@ useEffect(() => {
         </div>
       </div>
     )}
-
-    <main className="min-h-screen bg-black text-white p-6 flex flex-col gap-8">
-
-   
+    <main className="min-h-screen bg-black text-white px-8 py-6 flex flex-col">   
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl">TypeCode</h1>
+        <div>
+            <h1 className="text-4xl font-bold tracking-tight">
+           TypeCode
+           </h1>
+
+       <p className="text-zinc-500 text-sm mt-1">Code. Race. Win.</p>
+       </div>
 
         <div className="flex gap-3">
           <button onClick={resetTest} className="bg-zinc-800 px-4 py-2 rounded">
@@ -320,7 +412,20 @@ useEffect(() => {
           <button onClick={createRoom} className="bg-green-600 px-4 py-2 rounded">
             Create Room
           </button>
+          {!roomId &&  activeRoom && (
 
+<button
+onClick={()=>window.location.href=
+`/room/${activeRoom}`
+ 
+}
+className="bg-zinc-800 px-4 py-2 rounded"
+>
+
+Return to Room
+
+</button>
+)}
           {roomId && (
             <button onClick={copyLink} className="bg-zinc-800 px-4 py-2 rounded">
               🔗 Copy Link
@@ -328,20 +433,14 @@ useEffect(() => {
           )}
         </div>
       </div>
-
-      <div className="flex gap-6 max-w-7xl mx-auto">
-
-        
+      <div className="grid grid-cols-[1fr_350px] gap-10 flex-1 mt-10">        
         <div className="flex-1 flex flex-col items-center">
-
           <div className="text-xl text-zinc-500 mb-4">
             {timeLeft}s
           </div>
-
-          <div className="text-2xl leading-relaxed text-center max-w-4xl">
+           <div className="text-4xl font-medium leading-loose text-center max-w-5xl px-8">
             {text.split("").map((char, i) => {
               let style = "text-zinc-600";
-
               if (i < input.length) {
                 style =
                   input[i] === char
@@ -355,10 +454,8 @@ useEffect(() => {
                 </span>
               );
             })}
-          </div>
-
-          {/* STATS */}
-          <div className="flex gap-16 mt-10 text-center">
+          </div>        
+           <div className="flex gap-24 mt-14 text-center bg-zinc-900/60 rounded-2xl px-10 py-6 border border-zinc-800">
             <div>
               <div className="text-2xl">{stats.wpm}</div>
               <div className="text-sm text-zinc-400">WPM</div>
@@ -381,51 +478,86 @@ useEffect(() => {
         <div className="w-[300px] space-y-4">
 
            
-          <div className="bg-zinc-900 p-4 rounded-xl">
-            <h3 className="mb-2 text-zinc-300">Participants</h3>
-            {participants?.map((p, i) => (
-              <p key={i} className="text-sm text-zinc-400">
-                {p.username}
-              </p>
-            ))}
-          </div>
-
-         
-          <div className="bg-zinc-900 p-4 rounded-xl">
-            <h3 className="mb-2 text-zinc-300">Leaderboard</h3>
-            {leaderboard?.map((l, i) => (
-              <p key={i} className="text-sm text-zinc-400">
-                {i + 1}. {l.username} ({l.accuracy}%)
-              </p>
-            ))}
-          </div>
-
-         
-          <div className="bg-zinc-900 p-4 rounded-xl">
-            <h3 className="mb-2 text-zinc-300">Your Rooms</h3>
-            {rooms.map((r) => (
-              <div key={r.id} className="flex justify-between text-sm mb-1">
-                <span>{r.name}</span>
-                <button
-                  className="text-green-400"
-                  onClick={() =>
-                    (window.location.href = `/room/${r.id}`)
-                  }
-                >
-                  Join
-                </button>
-                <button
-                 onClick={() => (window.location.href = "/")}
-                className="bg-zinc-800 px-4 py-2 rounded"
-                >
-                 Home
-                </button>
-
-
+         <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
+         <h3 className="mb-2 text-zinc-300">Participants</h3>
+         {participants?.map((p,i)=>(<div key={i}
+         className="flex justify-between py-2 border-b border-zinc-800 last:border-none">
+          <span className="text-zinc-300">
+            {p.username}
+            </span>
+            <span className="text-green-500 text-sm">
+              online
+              </span>
               </div>
             ))}
+            </div>
+
+         
+          <div className=" bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
+            <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
+
+<h3 className="mb-2 text-zinc-300">
+Leaderboard
+</h3>
+
+{leaderboardData?.length > 0 ? (
+
+leaderboardData.map((l,i)=>(
+
+<div
+key={i}
+className="flex justify-between py-2 border-b border-zinc-800 last:border-none"
+>
+
+<span className="text-zinc-300">
+#{i+1} {l.username}
+</span>
+
+<span className="text-zinc-500">
+{l.wpm} WPM
+</span>
+
+</div>
+
+))
+
+) : (
+
+<p className="text-zinc-500">
+No scores yet
+</p>
+
+)}
+
+</div>
           </div>
 
+         {!roomId ? (
+
+             <div className=" bg-zinc-900/80 border border-zinc-600 rounded-2xl p-6 min-h-[120px] shadow-xl backdrop-blur">
+
+              <h3 className="mb-2 text-zinc-200">Your Rooms</h3>         
+                {rooms.map((r)=>(
+           <div  key={r.id}className="flex justify-between text-sm mb-1"> <span>{r.name}</span>
+
+               <button className="text-green-400" onClick={()=>(window.location.href=`/room/${r.id}`)} >  Join </button>
+
+           </div>
+
+                ))}
+
+            </div> ) : ( <div className=" bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
+              <h3 className="mb-2 text-zinc-300">Room Info</h3>
+
+                <p className="text-sm text-zinc-400">Room ID: {roomId}</p>
+
+                 <p className="text-sm text-zinc-400">Players:{participants?.length||1}</p>
+
+               <p className="text-sm text-green-400">Waiting for racers...</p>
+
+            </div>
+               )}        
+          
         </div>
 
       </div>

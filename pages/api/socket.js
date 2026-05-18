@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 
 export default function handler(req, res) {
   if (!res.socket.server.io) {
-    console.log("🔥 Initializing Socket.IO...");
+    console.log(" Initializing Socket.IO...");
 
     const io = new Server(res.socket.server, {
       path: "/api/socket",

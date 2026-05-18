@@ -66,7 +66,7 @@ export default function RoomPage() {
   return (
     <div className="p-6">
       <h1>Room: {roomId}</h1>
-      // @ts-ignore
+       
       <TypingBox
       roomId={roomId}
        socket={socket}

@@ -42,8 +42,6 @@ const SnippetSchema = new Schema<ISnippet>(
 SnippetSchema.index({ language: 1, difficulty: 1, topic: 1 });
 SnippetSchema.index({ language: 1, topic: 1 });
 
- 
-
 const Snippet: Model<ISnippet> =
   mongoose.models.Snippet || mongoose.model<ISnippet>("Snippet", SnippetSchema);
 
