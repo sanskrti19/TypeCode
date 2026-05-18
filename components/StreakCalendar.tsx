@@ -4,132 +4,184 @@ import { useEffect, useState } from "react"
 import { getStreak } from "@/utils/streak"
 
 export default function StreakCalendar() {
-
-  const [currentMonth, setCurrentMonth] = useState(new Date())
   const [streak, setStreak] = useState(0)
   const [dailyCount, setDailyCount] = useState<Record<string, number>>({})
- 
+
   const formatDate = (date: Date) =>
-    date.toISOString().slice(0, 10)
+    date.toISOString().slice(0,10)
 
   useEffect(() => {
 
-    const update = () => {
-      const data = getStreak()
+    const update=()=>{
+
+      const data=getStreak()
+
       setStreak(data.current)
       setDailyCount(data.dailyCount || {})
     }
 
     update()
- 
-    window.addEventListener("streakUpdated", update)
-    window.addEventListener("focus", update)
 
-    return () => {
-      window.removeEventListener("streakUpdated", update)
-      window.removeEventListener("focus", update)
+    window.addEventListener(
+      "streakUpdated",
+      update
+    )
+
+    window.addEventListener(
+      "focus",
+      update
+    )
+
+    return ()=>{
+
+      window.removeEventListener(
+        "streakUpdated",
+        update
+      )
+
+      window.removeEventListener(
+        "focus",
+        update
+      )
+
     }
 
-  }, [])
+  },[])
 
-  const daysInMonth = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth() + 1,
-    0
-  ).getDate()
+  const today=new Date()
 
-  const nextMonth = () => {
-    setCurrentMonth(
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)
-    )
-  }
+  const days=31
 
-  const prevMonth = () => {
-    setCurrentMonth(
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
-    )
-  }
+  return(
 
-  return (
+<div
+className="
+bg-zinc-900/80
+border
+border-zinc-800
+rounded-3xl
+p-6
+shadow-xl
+backdrop-blur
+relative
+overflow-hidden
+"
+>
 
- <div className="bg-zinc-900/90 p-5 rounded-2xl 
- text-white w-72 border border-zinc-800 shadow-lg fixed bottom-8 right-16 z-50 ">
+<div className="flex justify-between items-start mb-5">
 
-  <div className="flex justify-between items-center mb-3">
+<div>
 
-    <button
-      onClick={prevMonth}
-      className="text-zinc-400"
-    >
-      ←
-    </button>
+<h3 className="
+text-white
+text-3xl
+font-medium
+">
+Streaks
+</h3>
 
-    <span className="font-semibold text-sm">
-      {currentMonth.toLocaleString(
-        "default",
-        {month:"short"}
-      )}
-    </span>
+</div>
 
-    <button
-      onClick={nextMonth}
-      className="text-zinc-400"
-    >
-      →
-    </button>
+<button
+className="
+text-zinc-400
+hover:text-white
+text-3xl
+leading-none
+"
+>
+›
+</button>
 
-  </div>
+</div>
 
-  <div className="text-sm font-medium text-center mb-4">
-    🔥 {streak} Day Streak
-  </div>
 
-  <div className="grid grid-cols-7 gap-2">
+<div className="
+flex
+justify-center
+items-center
+gap-2
+mb-6
+">
 
-    {Array.from(
-      {length:daysInMonth},
-      (_,i)=>{
+<span className="text-orange-400">
+🔥
+</span>
 
-      const day=i+1
+<p className="
+text-white
+text-xl
+font-medium
+">
+{streak} Day Streak
+</p>
 
-      const dateObj=
-      new Date(
-        currentMonth.getFullYear(),
-        currentMonth.getMonth(),
-        day
-      )
+</div>
 
-      const dateStr=
-      formatDate(dateObj)
 
-      const isActive=
-      (dailyCount[dateStr]||0)>=3
+<div
+className="
+grid
+grid-cols-8
+gap-2
+"
+>
 
-      return(
+{Array.from(
+{length:days},
+(_,i)=>{
 
-      <div
-      key={day}
-      className={`
-      w-8 h-8 text-xs
-      flex items-center justify-center
-      rounded-md
-      ${
-      isActive
-      ? "bg-orange-500/20"
-      : "bg-zinc-800"
-      }
-      `}
-      >
+const dateObj=new Date(
+today.getFullYear(),
+today.getMonth(),
+i+1
+)
 
-      {isActive?"🔥":""}
+const isActive=
+(dailyCount[
+formatDate(dateObj)
+] ||0)>=3
 
-      </div>
+return(
 
-      )
+<div
+key={i}
+className={`
+w-10
+h-10
+rounded-xl
+border
+transition-all
 
-    })}
+${
+isActive
+?
+`
+bg-orange-500/15
+border-orange-500/40
+shadow-[0_0_12px_rgba(249,115,22,.4)]
+flex
+items-center
+justify-center
+`
+:
+`
+bg-zinc-800/70
+border-zinc-800
+`
+}
+`}
+>
 
-  </div>
+{isActive && "🔥"}
+
+</div>
+
+)
+
+})}
+
+</div>
 
 </div>
 

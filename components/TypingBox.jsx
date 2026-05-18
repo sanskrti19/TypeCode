@@ -4,6 +4,7 @@
  import { useEffect, useState, useRef } from "react"
 import { saveScore } from "@/lib/leaderboard"
 import ResultModal from "./ResultModal"
+import StreakCalendar from "./StreakCalendar"
  
  export default function TypingBox({ roomId , socket,  participants,
   leaderboard}) {
@@ -433,7 +434,8 @@ Return to Room
           )}
         </div>
       </div>
-      <div className="grid grid-cols-[1fr_350px] gap-10 flex-1 mt-10">        
+      <div className="grid grid-cols-[minmax(0,1fr)_340px] gap-6 flex-1 mt-10 max-w-[1400px] mx-auto w-full ">
+            
         <div className="flex-1 flex flex-col items-center">
           <div className="text-xl text-zinc-500 mb-4">
             {timeLeft}s
@@ -475,32 +477,38 @@ Return to Room
         </div>
 
         
-        <div className="w-[300px] space-y-4">
+          <div className="w-full space-y-4">
 
-           
-         <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
-         <h3 className="mb-2 text-zinc-300">Participants</h3>
-         {participants?.map((p,i)=>(<div key={i}
-         className="flex justify-between py-2 border-b border-zinc-800 last:border-none">
-          <span className="text-zinc-300">
-            {p.username}
-            </span>
-            <span className="text-green-500 text-sm">
-              online
-              </span>
-              </div>
-            ))}
-            </div>
+<div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
+<h3 className="mb-2 text-zinc-300">
+Participants
+</h3>
 
-         
-          <div className=" bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
-            <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
+{participants?.map((p,i)=>(
+
+<div
+key={i}
+className="flex justify-between py-2 border-b border-zinc-800 last:border-none"
+>
+<span>{p.username}</span>
+
+<span className="text-green-500 text-sm">
+online
+</span>
+
+</div>
+
+))}
+</div>
+
+
+<div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
 
 <h3 className="mb-2 text-zinc-300">
 Leaderboard
 </h3>
 
-{leaderboardData?.length > 0 ? (
+{leaderboardData?.length>0 ? (
 
 leaderboardData.map((l,i)=>(
 
@@ -509,7 +517,7 @@ key={i}
 className="flex justify-between py-2 border-b border-zinc-800 last:border-none"
 >
 
-<span className="text-zinc-300">
+<span>
 #{i+1} {l.username}
 </span>
 
@@ -521,7 +529,7 @@ className="flex justify-between py-2 border-b border-zinc-800 last:border-none"
 
 ))
 
-) : (
+):(
 
 <p className="text-zinc-500">
 No scores yet
@@ -530,35 +538,101 @@ No scores yet
 )}
 
 </div>
-          </div>
 
-         {!roomId ? (
 
-             <div className=" bg-zinc-900/80 border border-zinc-600 rounded-2xl p-6 min-h-[120px] shadow-xl backdrop-blur">
+{!roomId ? (
 
-              <h3 className="mb-2 text-zinc-200">Your Rooms</h3>         
-                {rooms.map((r)=>(
-           <div  key={r.id}className="flex justify-between text-sm mb-1"> <span>{r.name}</span>
+<div className="
+bg-zinc-900/80
+border border-zinc-800
+rounded-2xl
+p-5
+shadow-xl
+backdrop-blur
+">
 
-               <button className="text-green-400" onClick={()=>(window.location.href=`/room/${r.id}`)} >  Join </button>
+<h3 className="text-zinc-300 mb-4">
+Your Rooms
+</h3>
 
-           </div>
+<div className="space-y-3">
 
-                ))}
+{rooms.map((r)=>(
 
-            </div> ) : ( <div className=" bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
-              <h3 className="mb-2 text-zinc-300">Room Info</h3>
+<div
+key={r.id}
+className="
+bg-zinc-800/60
+border border-zinc-700
+rounded-xl
+px-4
+py-3
+flex
+justify-between
+items-center
+"
+>
 
-                <p className="text-sm text-zinc-400">Room ID: {roomId}</p>
+<div>
 
-                 <p className="text-sm text-zinc-400">Players:{participants?.length||1}</p>
+<p>{r.name}</p>
 
-               <p className="text-sm text-green-400">Waiting for racers...</p>
+<p className="text-xs text-zinc-500">
+ID:{r.id.slice(0,8)}...
+</p>
 
-            </div>
-               )}        
-          
-        </div>
+</div>
+
+<button
+onClick={()=>
+window.location.href=
+`/room/${r.id}`
+}
+className="
+bg-green-600
+px-3
+py-1
+rounded-lg
+"
+>
+Join
+</button>
+
+</div>
+
+))}
+
+</div>
+
+</div>
+
+) : (
+
+<div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
+
+<h3 className="mb-2 text-zinc-300">
+Room Info
+</h3>
+
+<p className="text-sm text-zinc-400">
+Room ID: {roomId}
+</p>
+
+<p className="text-sm text-zinc-400">
+Players: {participants?.length||1}
+</p>
+
+<p className="text-sm text-green-400">
+Waiting for racers...
+</p>
+
+</div>
+
+)}
+
+<StreakCalendar />
+
+</div>
 
       </div>
 
