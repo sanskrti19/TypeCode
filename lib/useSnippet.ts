@@ -1,65 +1,30 @@
-import { useState, useEffect, useCallback } from "react"
+"use client";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+import { useEffect, useState } from "react";
+import snippets from "@/data/snippets.json";
 
-export type Language = "javascript" | "python" | "cpp" | "sql" | "typescript" | "java"
-export type Difficulty = "easy" | "medium" | "hard"
+export function getRandomSnippet() {
+  const random =
+    snippets[
+      Math.floor(Math.random() * snippets.length)
+    ];
 
-export interface Snippet {
-  _id: string
-  id: string
-  language: Language
-  difficulty: Difficulty
-  topic: string
-  pattern: string
-  code: string
-  charCount: number
-  lineCount: number
-  timesPlayed: number
+  return random.code;
 }
-
-export interface SnippetFilters {
-  language?: Language
-  difficulty?: Difficulty
-  topic?: string
-}
- 
-
-const snippets = [
-  "function binarySearch(arr,target){ return arr.indexOf(target) }",
-  "def binary_search(arr,target): return arr.index(target)",
-  "for(let i=0;i<arr.length;i++){ console.log(arr[i]) }"
-];
 
 export function useSnippet() {
   const [code, setCode] = useState("");
 
-  const getSnippet = () => {
-    const random = snippets[Math.floor(Math.random() * snippets.length)];
-    setCode(random);
+  const refresh = () => {
+    setCode(getRandomSnippet());
   };
 
   useEffect(() => {
-    getSnippet();
+    refresh();
   }, []);
 
   return {
     code,
-    refresh: getSnippet
+    refresh,
   };
-}
-
- 
-
-export async function getRandomSnippet(filters: SnippetFilters = {}): Promise<string> {
-  const params = new URLSearchParams()
-  if (filters.language)   params.set("language",   filters.language)
-  if (filters.difficulty) params.set("difficulty", filters.difficulty)
-  if (filters.topic)      params.set("topic",      filters.topic)
-
-  const res = await fetch(`/api/snippets?${params.toString()}`)
-  if (!res.ok) return "No snippet found."
-
-  const data = await res.json()
-  return data.code ?? "No snippet found."
 }

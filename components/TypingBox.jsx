@@ -1,12 +1,11 @@
 "use client"
 import { useEffect, useState, useRef } from "react"
-import { saveScore } from "@/lib/leaderboard"
+import { getRandomSnippet } from "@/lib/useSnippet";
 import ResultModal from "./ResultModal"
 import StreakCalendar from "./StreakCalendar" 
  export default function TypingBox({ roomId , socket,  participants,leaderboard}) {
   const hasSubmitted = useRef(false);
-  const [activeRoom,setActiveRoom]=useState(null)
-  const [language, setLanguage] = useState("javascript")
+ 
    const [rooms, setRooms] = useState([]);
  const [showNameInput, setShowNameInput] = useState(true);
   const [username, setUsername] = useState("");
@@ -19,14 +18,8 @@ import StreakCalendar from "./StreakCalendar"
   const [finished, setFinished] = useState(false)
   const [startTime, setStartTime] = useState(null)
  const [leaderboardData,setLeaderboard]=useState([]);
-  const snippets = [
-    "function binarySearch(arr,target){ return arr.indexOf(target) }",
-    "def binary_search(arr,target): return arr.index(target)",
-    "for(let i=0;i<arr.length;i++){ console.log(arr[i]) }"
-  ]
-  const getSnippet = () => {
-    return snippets[Math.floor(Math.random() * snippets.length)]
-  }
+ const getSnippet = () => getRandomSnippet();
+  
  const finishTest = async()=>{
 if(hasSubmitted.current)
 return;
@@ -44,7 +37,7 @@ setShowResult(true);
 if(roomId && socket){
 socket.emit("submit-score",{roomId,username:name,wpm:stats.wpm,accuracy:stats.accuracy});
 }}
-useEffect(()=>{setActiveRoom(localStorage.getItem("activeRoom"))},[]) 
+ 
  useEffect(()=>{const getLeaderboard=async()=>{const res=await fetch("/api/leaderboard");
 const data=await res.json();
 setLeaderboard(data);
@@ -110,11 +103,11 @@ useEffect(() => {
     setFinished(false)
     setStartTime(null)
     setShowResult(false)
-    setWpmHistory([])
+     
   }
   useEffect(() => {
     resetTest()
-  }, [ language,  difficulty])
+  }, [  ])
    useEffect(() => {
     if (!isRunning || finished) return
     if (timeLeft === 0) {
@@ -172,12 +165,12 @@ useEffect(() => {
       accuracy,
       time: Math.floor(time)
     })
-    setWpmHistory(prev => [...prev, wpm])
+    
     if (input.length >= text.length) {
       finishTest()
     }
   }, [input])
- return (  <>     
+  return (  <>     
     {showNameInput && (
       <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
         <div className="bg-zinc-900 p-6 rounded-xl shadow-xl">
@@ -199,7 +192,7 @@ return;
 
 localStorage.setItem("username",finalName);
     setShowNameInput(false);
-    setShowNameInput(false); 
+    
   }}
 >
   Join Room
@@ -207,231 +200,155 @@ localStorage.setItem("username",finalName);
         </div>
       </div>
     )}
-     <main className="min-h-screen bg-black text-white px-4 sm:px-6 lg:px-8 py-6 flex flex-col overflow-x-hidden">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-            <h1 className="text-4xl font-bold tracking-tight">
-           TypeCode
-           </h1>
+    <main className="min-h-screen bg-black text-white px-6 py-8">
+  
+  {/* Header */}
+  <div className="max-w-7xl mx-auto flex items-start justify-between mb-16">
+    <div>
+      <h1 className="text-5xl font-bold">TypeCode</h1>
+      <p className="text-zinc-500 mt-1">Code. Race. Win.</p>
+    </div>
 
-       <p className="text-zinc-500 text-sm mt-1">Code. Race. Win.</p>
-       </div>
-       <div className="flex flex-wrap gap-3">         
-          <button onClick={resetTest} className="bg-zinc-800 px-4 py-2 rounded">
-            Restart
-          </button>
-          <button onClick={createRoom} className="bg-green-600 px-4 py-2 rounded">
-            Create Room
-          </button>
-          {!roomId &&  activeRoom && (<button onClick={()=>window.location.href=`/room/${activeRoom}` }
-          className="bg-zinc-800 px-4 py-2 rounded">       
-  Return to Room
-  </button>
-)}
-          {roomId && (
-            <button onClick={copyLink} className="bg-zinc-800 px-4 py-2 rounded">
-              🔗 Copy Link
-            </button>
-          )}
-        </div>
-      </div>
-       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 flex-1 mt-10 max-w-[1400px] mx-auto w-full overflow-hidden ">
-            
-        <div className="flex-1 flex flex-col items-center">
-          <div className="text-xl text-zinc-500 mb-4">
-            {timeLeft}s
-          </div>
-           <div className="text-xl sm:text-2xl md:text-4xl font-medium leading-relaxed text-center w-full px-2 sm:px-4 break-words">
-            {text.split("").map((char, i) => {
-              let style = "text-zinc-600";
-              if (i < input.length) {
-                style = input[i] === char? "text-green-400": "text-red-500";
-              }
-              return (
-                <span key={i} className={style}>
-                  {char}
-                </span>
-              );
-            })}
-          </div>    
-          <div className="flex flex-wrap justify-center gap-8 mt-14 text-center bg-zinc-900/60 rounded-2xl px-6 py-6 border border-zinc-800 ">         
-            <div>
-              <div className="text-2xl">{stats.wpm}</div>
-              <div className="text-sm text-zinc-400">WPM</div>
-            </div>
-            <div>
-              <div className="text-2xl">{stats.accuracy}%</div>
-              <div className="text-sm text-zinc-400">Accuracy</div>
-            </div>
-            <div>
-              <div className="text-2xl">{stats.time}s</div>
-              <div className="text-sm text-zinc-400">Time</div>
-            </div>
-          </div>
+    <div className="flex gap-3">
+      <button className="px-6 py-3 rounded bg-zinc-800">
+        Restart
+      </button>
 
-        </div>
+      <button className="px-6 py-3 rounded bg-green-600">
+        Create Room
+      </button>
 
-        
-          <div className="w-full space-y-4">
+      <button className="px-6 py-3 rounded bg-zinc-800">
+        Return to Room
+      </button>
+    </div>
+  </div>
+ 
+ <div className="max-w-7xl mx-auto flex justify-center gap-24 items-start">
+   
+<div className="w-[700px] flex flex-col items-center pt-16">
 
-<div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
-<h3 className="mb-2 text-zinc-300">
+  <div className="text-zinc-500 text-xl mb-8">
+  {timeLeft}s
+</div>
+
+  <div className="w-full max-w-3xl">
+  <div className="text-xl leading-loose text-zinc-500 max-w-2xl mx-auto text-center "   
+  >
+    {text.split("").map((char, index) => {
+      let color = "text-zinc-500";
+
+      if (index < input.length) {
+        color =
+          input[index] === char
+            ? "text-white"
+            : "text-red-500";
+      }
+
+      return (
+        <span key={index} className={color}>
+          {char}
+        </span>
+      );
+    })}
+  </div>
+
+  <input
+  value={input}
+  onChange={(e) => setInput(e.target.value)}
+  className="opacity-0 absolute"
+  autoFocus
+/>
+</div>
+ <div
+  className="
+    mt-10
+    w-[430px]
+    bg-[#0b0b13]
+    border border-zinc-800
+    rounded-3xl
+    px-8 py-5
+    flex justify-around
+  "
+>
+  <div className="text-center">
+    <h2 className="text-4xl font-semibold">{stats.wpm}</h2>
+    <p className="text-zinc-500">WPM</p>
+  </div>
+
+  <div className="text-center">
+  <h2 className="text-4xl font-semibold">
+    {stats.accuracy}%
+  </h2>
+  <p className="text-zinc-500">Accuracy</p>
+</div>
+
+  <div className="text-center">
+    <h2 className="text-4xl font-semibold">{timeLeft}s</h2>
+    <p className="text-zinc-500">Time</p>
+  </div>
+</div>
+
+</div>
+ 
+
+     <div className="w-[350px] space-y-6">
+
+<div className="bg-zinc-900 rounded-3xl p-5">
+<h3 className="mb-4 text-lg font-semibold">
 Participants
 </h3>
 
-{participants?.map((p,i)=>(
-
-<div
-key={i}
-className="flex justify-between py-2 border-b border-zinc-800 last:border-none"
->
-<span>{p.username}</span>
-
-<span className="text-green-500 text-sm">
-online
-</span>
-
+{participants?.map((p,index)=>(
+<div key={index}
+className="py-2 border-b border-zinc-800">
+{p}
 </div>
-
 ))}
 </div>
 
 
-<div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
-
-<h3 className="mb-2 text-zinc-300">
+<div className="bg-zinc-900 rounded-3xl p-5">
+<h3 className="mb-4 text-lg font-semibold">
 Leaderboard
 </h3>
 
-{leaderboardData?.length>0 ? (
-
-leaderboardData.map((l,i)=>(
-
+{leaderboardData?.slice(0,5).map((user,index)=>(
 <div
-key={i}
-className="flex justify-between py-2 border-b border-zinc-800 last:border-none"
+key={index}
+className="flex justify-between py-2"
 >
-
-<span>
-#{i+1} {l.username}
-</span>
-
-<span className="text-zinc-500">
-{l.wpm} WPM
-</span>
-
+<span>{user.username}</span>
+<span>{user.wpm} WPM</span>
 </div>
-
-))
-
-):(
-
-<p className="text-zinc-500">
-No scores yet
-</p>
-
-)}
-
-</div>
-
-
-{!roomId ? (
-
-<div className="
-bg-zinc-900/80
-border border-zinc-800
-rounded-2xl
-p-5
-shadow-xl
-backdrop-blur
-">
-
-<h3 className="text-zinc-300 mb-4">
-Your Rooms
-</h3>
-
-<div className="space-y-3">
-
-{rooms.map((r)=>(
-
-<div
-key={r.id}
-className="
-bg-zinc-800/60
-border border-zinc-700
-rounded-xl
-px-4
-py-3
-flex
-justify-between
-items-center
-"
->
-
-<div>
-
-<p>{r.name}</p>
-
-<p className="text-xs text-zinc-500">
-ID:{r.id.slice(0,8)}...
-</p>
-
-</div>
-
-<button
-onClick={()=>
-window.location.href=
-`/room/${r.id}`
-}
-className="
-bg-green-600
-px-3
-py-1
-rounded-lg
-"
->
-Join
-</button>
-
-</div>
-
 ))}
-
 </div>
 
-</div>
 
-) : (
-
-<div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur">
-
-<h3 className="mb-2 text-zinc-300">
-Room Info
+<div className="bg-zinc-900 rounded-3xl p-5">
+<h3 className="mb-4 text-lg font-semibold">
+Rooms
 </h3>
 
-<p className="text-sm text-zinc-400">
-Room ID: {roomId}
-</p>
+{rooms.map((room)=>(
+<div
+key={room.id}
+className="py-2"
+>
+{room.name}
+</div>
+))}
+</div>
 
-<p className="text-sm text-zinc-400">
-Players: {participants?.length||1}
-</p>
 
-<p className="text-sm text-green-400">
-Waiting for racers...
-</p>
+<StreakCalendar/>
 
 </div>
 
-)}
+  </div>
 
-<StreakCalendar />
-
-</div>
-
-      </div>
-
-    </main>
+</main>
+      
 
     {showResult && (
       <ResultModal

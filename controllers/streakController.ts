@@ -4,11 +4,8 @@ import { qualifiesForStreak } from "@/utils/streakUtils"
 export const logPractice = async (req: Request) => {
 
   const body = await req.json()
-  const { solved, time } = body
-
-  // ⚠️ TEMP user (replace later with auth)
+  const { solved, time } = body 
   const userId = "dummyUserId"
-
   const today = new Date().toISOString().split("T")[0]
 
   let activity = await PracticeActivity.findOne({ userId, date: today })

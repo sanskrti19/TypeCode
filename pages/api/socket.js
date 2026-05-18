@@ -12,8 +12,7 @@ export default function handler(req, res) {
 
     const rooms = {};
     const ROOM_TTL = 5 * 60 * 60 * 1000;
-
-    // 🧹 Cleanup inactive rooms
+ 
     setInterval(() => {
       const now = Date.now();
 
