@@ -1,33 +1,19 @@
 "use client"
- 
-
- import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef } from "react"
 import { saveScore } from "@/lib/leaderboard"
 import ResultModal from "./ResultModal"
-import StreakCalendar from "./StreakCalendar"
- 
- export default function TypingBox({ roomId , socket,  participants,
-  leaderboard}) {
+import StreakCalendar from "./StreakCalendar" 
+ export default function TypingBox({ roomId , socket,  participants,leaderboard}) {
   const hasSubmitted = useRef(false);
   const [activeRoom,setActiveRoom]=useState(null)
   const [language, setLanguage] = useState("javascript")
-  const [difficulty, setDifficulty] = useState("easy")
-  const [wpmHistory, setWpmHistory] = useState([])
-  const [rooms, setRooms] = useState([]);
-
-  const [showNameInput, setShowNameInput] = useState(true);
-const [username, setUsername] = useState("");
-
+   const [rooms, setRooms] = useState([]);
+ const [showNameInput, setShowNameInput] = useState(true);
+  const [username, setUsername] = useState("");
   const [text, setText] = useState("")
   const [input, setInput] = useState("")
   const [showResult, setShowResult] = useState(false)
-
-  const [stats, setStats] = useState({
-    wpm: 0,
-    accuracy: 100,
-    time: 0
-  })
-
+  const [stats, setStats] = useState({wpm: 0,accuracy: 100,time: 0 })
   const [timeLeft, setTimeLeft] = useState(30)
   const [isRunning, setIsRunning] = useState(false)
   const [finished, setFinished] = useState(false)
@@ -38,212 +24,87 @@ const [username, setUsername] = useState("");
     "def binary_search(arr,target): return arr.index(target)",
     "for(let i=0;i<arr.length;i++){ console.log(arr[i]) }"
   ]
-
   const getSnippet = () => {
     return snippets[Math.floor(Math.random() * snippets.length)]
   }
  const finishTest = async()=>{
-
 if(hasSubmitted.current)
 return;
-
 hasSubmitted.current=true;
-
 if(finished) return;
-const name =
-localStorage.getItem(
-"username"
+const name =localStorage.getItem("username");
+try{await fetch("/api/score",{
+method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({username:name,wpm:stats.wpm,accuracy:stats.accuracy})}
 );
-
- 
-
-try{
-
-await fetch(
-"/api/score",
-{
-
-method:"POST",
-
-headers:{
-"Content-Type":
-"application/json"
-},
-
-body:JSON.stringify({
-
-username:name,
-
-wpm:stats.wpm,
-
-accuracy:stats.accuracy
-
-})
-
-}
-
-);
-
-}catch(error){
-
-console.log(error);
-
-}
-
+}catch(error){console.log(error);}
 setFinished(true);
-
 setIsRunning(false);
-
 setShowResult(true);
-
 if(roomId && socket){
-
-socket.emit(
-"submit-score",
-{
-roomId,
-username:name,
-wpm:stats.wpm,
-accuracy:stats.accuracy
-}
-);
-
-}
-
-}
-useEffect(()=>{
-
-setActiveRoom(
-localStorage.getItem("activeRoom")
-)
-
-},[]) 
-
-
- useEffect(()=>{
-
-const getLeaderboard=
-async()=>{
-
-const res=
-await fetch(
-"/api/leaderboard"
-);
-
-const data=
-await res.json();
-
+socket.emit("submit-score",{roomId,username:name,wpm:stats.wpm,accuracy:stats.accuracy});
+}}
+useEffect(()=>{setActiveRoom(localStorage.getItem("activeRoom"))},[]) 
+ useEffect(()=>{const getLeaderboard=async()=>{const res=await fetch("/api/leaderboard");
+const data=await res.json();
 setLeaderboard(data);
-
 };
-
 getLeaderboard();
-
 },[]);
 const createRoom = async () => {
-
   if (!localStorage.getItem("username")) {
     setShowNameInput(true);
     return;
   }
-
-  const username =
-    localStorage.getItem("username");
-
-  const existingRoom =
-    localStorage.getItem("activeRoom");
-
+  const username =localStorage.getItem("username");
+  const existingRoom =localStorage.getItem("activeRoom");
   if (existingRoom) {
-
     const confirmNew = confirm(
       "You already have a room. Create a new one?"
     );
-
     if (!confirmNew) {
-
-      window.location.href =
-      `/room/${existingRoom}`;
-
+      window.location.href = `/room/${existingRoom}`;
       return;
     }
   }
-
-  const res =
-    await fetch("/api/rooms",{
-      method:"POST"
-    });
-
-  const data =
-    await res.json();
-
-  const rooms =
-    JSON.parse(
-      localStorage.getItem("rooms")
-      || "[]"
-    );
-
+  const res =await fetch("/api/rooms",{method:"POST"});
+  const data =await res.json();
+  const rooms =JSON.parse(localStorage.getItem("rooms")|| "[]");
   const newRoom = {
-
-    id:data.roomId,
-
-    name:
-    `${username}'s Room`
-
-  };
-
-  const exists =
-    rooms.find(
-      r=>r.id===data.roomId
-    );
-
-  if(!exists){
-
+    id:data.roomId,name:`${username}'s Room`};
+  const exists =rooms.find(r=>r.id===data.roomId);
+    if(!exists){
     localStorage.setItem("rooms", JSON.stringify(
       [newRoom,...rooms]
       )
-
     );
-
   }
-
   localStorage.setItem(
     "activeRoom",
     data.roomId
   );
-
-  window.location.href =
-  `/room/${data.roomId}`;
-
+  window.location.href =`/room/${data.roomId}`;
 };
 const [roomLink, setRoomLink] = useState("")
-
-
 useEffect(() => {
   const storedRooms = JSON.parse(localStorage.getItem("rooms") || "[]");
   setRooms(storedRooms);
 }, []);
-
-
-
 useEffect(() => {
   if (roomId) {
     setRoomLink(`${window.location.origin}/room/${roomId}`)
   }
 }, [roomId])
-
  const copyLink = () => {
   navigator.clipboard.writeText(roomLink);
   alert("Link copied!");
 };
-
   const resetTest = () => {
     hasSubmitted.current=false;
     const snippet = getSnippet()
-
     setText(snippet)
     setInput("")
     setStats({ wpm: 0, accuracy: 100, time: 0 })
-
     setTimeLeft(30)
     setIsRunning(false)
     setFinished(false)
@@ -251,40 +112,31 @@ useEffect(() => {
     setShowResult(false)
     setWpmHistory([])
   }
-
   useEffect(() => {
     resetTest()
   }, [ language,  difficulty])
- 
-  useEffect(() => {
+   useEffect(() => {
     if (!isRunning || finished) return
-
     if (timeLeft === 0) {
       finishTest()
       return
     }
-
     const timer = setTimeout(() => {
       setTimeLeft((t) => t - 1)
     }, 1000)
-
     return () => clearTimeout(timer)
   }, [isRunning, timeLeft, finished])
- 
-  useEffect(() => {
+   useEffect(() => {
     const handleKey = (e) => {
   if (e.key === " ") {
     e.preventDefault();  
   }
   if (document.activeElement.tagName === "INPUT") return;
-
   if (finished) return;
-
   if (e.key === "Backspace") {
     setInput((prev) => prev.slice(0, -1));
     return;
   }
-
   if (e.key.length === 1) {
     if (!isRunning) {
       setIsRunning(true);
@@ -293,66 +145,39 @@ useEffect(() => {
     setInput((prev) => prev + e.key);
   }
 };
-
-
     window.addEventListener("keydown", handleKey)
     return () => window.removeEventListener("keydown", handleKey)
-
   }, [finished, isRunning, input, text])
-
-
   useEffect(() => {
   const name = localStorage.getItem("username");
-
   if (name) {
     setUsername(name);
     setShowNameInput(false);
   } else if (roomId) {
-    
-    setShowNameInput(true);
+        setShowNameInput(true);
   }
-}, [roomId]);
-
-
-   
+}, [roomId]);   
   useEffect(() => {
-
     if (!startTime) return
-
     let correct = 0
-
     for (let i = 0; i < input.length; i++) {
       if (input[i] === text[i]) correct++
     }
-
-    
-
     const accuracy =
-      input.length === 0
-        ? 100
-        : Math.round((correct / input.length) * 100)
-
+      input.length === 0 ? 100 : Math.round((correct / input.length) * 100)
     const time = (Date.now() - startTime) / 1000
     const wpm = Math.round((correct / 5) / (time / 60))
-
     setStats({
       wpm: isFinite(wpm) ? wpm : 0,
       accuracy,
       time: Math.floor(time)
     })
-
     setWpmHistory(prev => [...prev, wpm])
-
- 
     if (input.length >= text.length) {
       finishTest()
     }
-
   }, [input])
-
- return (
-  <>
-     
+ return (  <>     
     {showNameInput && (
       <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
         <div className="bg-zinc-900 p-6 rounded-xl shadow-xl">
@@ -367,35 +192,22 @@ useEffect(() => {
   onClick={() => {
    const finalName =
 username.trim();
-
 if(!finalName){
-
-alert(
-"Enter your name"
-);
-
+alert("Enter your name");
 return;
-
 }
 
-localStorage.setItem(
-"username",
-finalName
-);
-
-setShowNameInput(false);
+localStorage.setItem("username",finalName);
     setShowNameInput(false);
- 
- 
+    setShowNameInput(false); 
   }}
 >
   Join Room
-</button>
-          
+</button>          
         </div>
       </div>
     )}
-    <main className="min-h-screen bg-black text-white px-8 py-6 flex flex-col">   
+     <main className="min-h-screen bg-black text-white px-4 sm:px-6 lg:px-8 py-6 flex flex-col overflow-x-hidden">
       <div className="flex justify-between items-center mb-6">
         <div>
             <h1 className="text-4xl font-bold tracking-tight">
@@ -404,28 +216,17 @@ setShowNameInput(false);
 
        <p className="text-zinc-500 text-sm mt-1">Code. Race. Win.</p>
        </div>
-
-        <div className="flex gap-3">
+       <div className="flex flex-wrap gap-3">         
           <button onClick={resetTest} className="bg-zinc-800 px-4 py-2 rounded">
             Restart
           </button>
-
           <button onClick={createRoom} className="bg-green-600 px-4 py-2 rounded">
             Create Room
           </button>
-          {!roomId &&  activeRoom && (
-
-<button
-onClick={()=>window.location.href=
-`/room/${activeRoom}`
- 
-}
-className="bg-zinc-800 px-4 py-2 rounded"
->
-
-Return to Room
-
-</button>
+          {!roomId &&  activeRoom && (<button onClick={()=>window.location.href=`/room/${activeRoom}` }
+          className="bg-zinc-800 px-4 py-2 rounded">       
+  Return to Room
+  </button>
 )}
           {roomId && (
             <button onClick={copyLink} className="bg-zinc-800 px-4 py-2 rounded">
@@ -434,40 +235,34 @@ Return to Room
           )}
         </div>
       </div>
-      <div className="grid grid-cols-[minmax(0,1fr)_340px] gap-6 flex-1 mt-10 max-w-[1400px] mx-auto w-full ">
+       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 flex-1 mt-10 max-w-[1400px] mx-auto w-full overflow-hidden ">
             
         <div className="flex-1 flex flex-col items-center">
           <div className="text-xl text-zinc-500 mb-4">
             {timeLeft}s
           </div>
-           <div className="text-4xl font-medium leading-loose text-center max-w-5xl px-8">
+           <div className="text-xl sm:text-2xl md:text-4xl font-medium leading-relaxed text-center w-full px-2 sm:px-4 break-words">
             {text.split("").map((char, i) => {
               let style = "text-zinc-600";
               if (i < input.length) {
-                style =
-                  input[i] === char
-                    ? "text-green-400"
-                    : "text-red-500";
+                style = input[i] === char? "text-green-400": "text-red-500";
               }
-
               return (
                 <span key={i} className={style}>
                   {char}
                 </span>
               );
             })}
-          </div>        
-           <div className="flex gap-24 mt-14 text-center bg-zinc-900/60 rounded-2xl px-10 py-6 border border-zinc-800">
+          </div>    
+          <div className="flex flex-wrap justify-center gap-8 mt-14 text-center bg-zinc-900/60 rounded-2xl px-6 py-6 border border-zinc-800 ">         
             <div>
               <div className="text-2xl">{stats.wpm}</div>
               <div className="text-sm text-zinc-400">WPM</div>
             </div>
-
             <div>
               <div className="text-2xl">{stats.accuracy}%</div>
               <div className="text-sm text-zinc-400">Accuracy</div>
             </div>
-
             <div>
               <div className="text-2xl">{stats.time}s</div>
               <div className="text-sm text-zinc-400">Time</div>
