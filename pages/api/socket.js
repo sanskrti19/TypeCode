@@ -23,7 +23,7 @@ export default function handler(req, res) {
 
         if (now - room.lastActive > ROOM_TTL) {
           delete rooms[roomId];
-          console.log("🧹 Room deleted:", roomId);
+          console.log(" Room deleted:", roomId);
         }
       });
     }, 60000);

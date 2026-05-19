@@ -1,16 +1,13 @@
 import TypingBox from "@/components/TypingBox"
  export default function Home() {
   return (
-    <main className="min-h-screen bg-black text-white p-6">
+   <main className="min-h-screen bg-black text-white px-4 sm:px-6">
 
-      <div className="flex gap-6 max-w-8xl mx-auto">
-       
-        <div className="flex-1 flex items-center justify-center">
+        <div className="max-w-7xl mx-auto w-full">
+
+          <div className="w-full flex items-center justify-center">
           <TypingBox />
         </div>
-
-         
-         
 
              
         

@@ -124,7 +124,7 @@ useEffect(() => {
   if (e.key === " ") {
     e.preventDefault();  
   }
-  if (document.activeElement.tagName === "INPUT") return;
+    
   if (finished) return;
   if (e.key === "Backspace") {
     setInput((prev) => prev.slice(0, -1));
@@ -201,114 +201,105 @@ localStorage.setItem("username",finalName);
       </div>
     )}
     <main className="min-h-screen bg-black text-white px-6 py-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[1fr_340px] gap-12 items-start pt-8">
   
-  {/* Header */}
-  <div className="max-w-7xl mx-auto flex items-start justify-between mb-16">
+  
     <div>
-      <h1 className="text-5xl font-bold">TypeCode</h1>
+       <h1 className="text-3xl md:text-5xl font-bold">TypeCode</h1>
       <p className="text-zinc-500 mt-1">Code. Race. Win.</p>
     </div>
 
-    <div className="flex gap-3">
-      <button className="px-6 py-3 rounded bg-zinc-800">
+     <div className="flex flex-wrap items-center gap-3 mt-2">
+      <button onClick={resetTest} className="px-4 py-3 rounded-xl bg-zinc-800">
         Restart
       </button>
 
-      <button className="px-6 py-3 rounded bg-green-600">
+      <button  onClick={createRoom} className="px-7 py-3 rounded-xl bg-green-600">
         Create Room
       </button>
 
-      <button className="px-6 py-3 rounded bg-zinc-800">
+      <button  onClick={()=>{const room=localStorage.getItem("activeRoom");
+      if(room){
+        window.location.href=`/room/${room}`;
+      }
+}} className="px-5 py-3 rounded-xl bg-zinc-800">
         Return to Room
       </button>
     </div>
   </div>
  
- <div className="max-w-7xl mx-auto flex justify-center gap-24 items-start">
+   <div className="max-w-7xl mx-auto grid xl:grid-cols-[minmax(0,1fr)_320px] gap-16 items-start "> 
+     <div className="w-full flex flex-col items-center justify-center min-h-[70vh]">
+      <div className="text-zinc-500 text-base md:text-xl mb-6">
+              {timeLeft}s
+      </div>
+
+<div className="w-full max-w-3xl relative">
+
+<div onClick={()=>{ document.getElementById("typingInput")?.focus() }} className=" text-lg md:text-2xl leading-loose max-w-3xl mx-auto text-center cursor-text select-none px-4 text-zinc-500 " >
+
+{text.split("").map((char,index)=>{
+  let color="text-zinc-500";
+  if(index<input.length){ color=input[index]===char ? "text-white": "text-red-500";}
+  return(
+<span key={index} className={color}>
+{char}
+</span>
+)
+
+})}
+</div>
+
+ <input
+id="typingInput" value={input} onChange={(e)=>setInput(e.target.value)} autoFocus className=" absolute opacity-0 w-1 h-1 pointer-events-none " />
+
+
+
+</div>
+
+
    
-<div className="w-[700px] flex flex-col items-center pt-16">
+ <div   className="     mt-10     w-full max-w-md     bg-[#0b0b13]     border border-zinc-800    rounded-3xl    px-8 py-5 grid grid-cols-3   ">
 
-  <div className="text-zinc-500 text-xl mb-8">
-  {timeLeft}s
-</div>
-
-  <div className="w-full max-w-3xl">
-  <div className="text-xl leading-loose text-zinc-500 max-w-2xl mx-auto text-center "   
-  >
-    {text.split("").map((char, index) => {
-      let color = "text-zinc-500";
-
-      if (index < input.length) {
-        color =
-          input[index] === char
-            ? "text-white"
-            : "text-red-500";
-      }
-
-      return (
-        <span key={index} className={color}>
-          {char}
-        </span>
-      );
-    })}
-  </div>
-
-  <input
-  value={input}
-  onChange={(e) => setInput(e.target.value)}
-  className="opacity-0 absolute"
-  autoFocus
-/>
-</div>
- <div
-  className="
-    mt-10
-    w-[430px]
-    bg-[#0b0b13]
-    border border-zinc-800
-    rounded-3xl
-    px-8 py-5
-    flex justify-around
-  "
->
   <div className="text-center">
-    <h2 className="text-4xl font-semibold">{stats.wpm}</h2>
+    <h2 className="text-2xl md:text-4xl font-semibold">{stats.wpm}</h2>
     <p className="text-zinc-500">WPM</p>
   </div>
 
   <div className="text-center">
-  <h2 className="text-4xl font-semibold">
+  <h2 className="text-2xl md:text-4xl font-semibold">
     {stats.accuracy}%
   </h2>
   <p className="text-zinc-500">Accuracy</p>
 </div>
 
   <div className="text-center">
-    <h2 className="text-4xl font-semibold">{timeLeft}s</h2>
+    <h2 className="text-2xl md:text-4xl font-semibold">{timeLeft}s</h2>
     <p className="text-zinc-500">Time</p>
   </div>
 </div>
 
 </div>
- 
-
-     <div className="w-[350px] space-y-6">
-
-<div className="bg-zinc-900 rounded-3xl p-5">
+ <div className="w-full xl:w-[350px] space-y-6 xl:ml-16 2xl:ml-32 ">
+      <div className="bg-zinc-900/70 rounded-2xl p-4 border border-zinc-800 backdrop-blur">
 <h3 className="mb-4 text-lg font-semibold">
 Participants
 </h3>
-
 {participants?.map((p,index)=>(
-<div key={index}
-className="py-2 border-b border-zinc-800">
-{p}
+<div
+key={p.id || index}
+className="py-2 border-b border-zinc-800"
+>
+{p.username || p}
 </div>
 ))}
+
+ 
+ 
 </div>
 
 
-<div className="bg-zinc-900 rounded-3xl p-5">
+<div className="bg-zinc-900/70 rounded-2xl p-4 border border-zinc-800 backdrop-blur"> 
 <h3 className="mb-4 text-lg font-semibold">
 Leaderboard
 </h3>
@@ -316,8 +307,7 @@ Leaderboard
 {leaderboardData?.slice(0,5).map((user,index)=>(
 <div
 key={index}
-className="flex justify-between py-2"
->
+ className="flex justify-between py-3 px-2 rounded-lg hover:bg-zinc-800/50 transition " >
 <span>{user.username}</span>
 <span>{user.wpm} WPM</span>
 </div>
@@ -325,7 +315,7 @@ className="flex justify-between py-2"
 </div>
 
 
-<div className="bg-zinc-900 rounded-3xl p-5">
+<div className="bg-zinc-900/70 rounded-2xl p-4 border border-zinc-800 backdrop-blur"> 
 <h3 className="mb-4 text-lg font-semibold">
 Rooms
 </h3>

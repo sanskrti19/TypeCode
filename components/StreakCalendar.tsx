@@ -4,55 +4,70 @@ import { useEffect, useState } from "react"
 import { getStreak } from "@/utils/streak"
 
 export default function StreakCalendar() {
-  const [streak, setStreak] = useState(0)
-  const [dailyCount, setDailyCount] = useState<Record<string, number>>({})
+const [streak,setStreak]=useState(0)
+const [dailyCount,setDailyCount]=useState<Record<string,number>>({})
+const [currentMonth,setCurrentMonth]=useState(new Date())
 
-  const formatDate = (date: Date) =>
-    date.toISOString().slice(0,10)
+const formatDate=(date:Date)=>
+date.toISOString().slice(0,10)
 
-  useEffect(() => {
+useEffect(()=>{
 
-    const update=()=>{
+const update=()=>{
 
-      const data=getStreak()
+const data=getStreak()
 
-      setStreak(data.current)
-      setDailyCount(data.dailyCount || {})
-    }
+setStreak(data.current)
+setDailyCount(data.dailyCount||{})
+}
 
-    update()
+update()
 
-    window.addEventListener(
-      "streakUpdated",
-      update
-    )
+window.addEventListener(
+"streakUpdated",
+update
+)
 
-    window.addEventListener(
-      "focus",
-      update
-    )
+window.addEventListener(
+"focus",
+update
+)
 
-    return ()=>{
+return()=>{
 
-      window.removeEventListener(
-        "streakUpdated",
-        update
-      )
+window.removeEventListener(
+"streakUpdated",
+update
+)
 
-      window.removeEventListener(
-        "focus",
-        update
-      )
+window.removeEventListener(
+"focus",
+update
+)
 
-    }
+}
 
-  },[])
+},[])
 
-  const today=new Date()
+const monthName=currentMonth.toLocaleString(
+"default",
+{
+month:"long",
+year:"numeric"
+}
+)
 
-  const days=31
+const year=currentMonth.getFullYear()
+const month=currentMonth.getMonth()
 
-  return(
+const daysInMonth=
+new Date(
+year,
+month+1,
+0
+).getDate()
+
+return(
 
 <div
 className="
@@ -63,31 +78,73 @@ rounded-3xl
 p-6
 shadow-xl
 backdrop-blur
-relative
-overflow-hidden
 "
 >
 
-<div className="flex justify-between items-start mb-5">
+<div className="
+flex
+justify-between
+items-center
+mb-4
+">
 
 <div>
 
 <h3 className="
 text-white
-text-3xl
-font-medium
+text-2xl
+font-semibold
 ">
-Streaks
+🔥 Streaks
 </h3>
+
+<p className="
+text-zinc-500
+text-sm
+mt-1
+">
+{monthName}
+</p>
 
 </div>
 
+<div className="flex gap-2">
+
 <button
+onClick={()=>
+setCurrentMonth(
+new Date(
+year,
+month-1,
+1
+)
+)}
 className="
-text-zinc-400
-hover:text-white
-text-3xl
-leading-none
+w-8
+h-8
+rounded-full
+bg-zinc-800
+hover:bg-zinc-700
+"
+>
+‹
+</button>
+
+<button
+onClick={()=>
+setCurrentMonth(
+new Date(
+year,
+month+1,
+1
+)
+)}
+className="
+w-8
+h-8
+rounded-full
+bg-zinc-800
+hover:bg-zinc-700
 "
 >
 ›
@@ -95,18 +152,17 @@ leading-none
 
 </div>
 
+</div>
 
 <div className="
 flex
 justify-center
 items-center
 gap-2
-mb-6
+mb-8
 ">
 
-<span className="text-orange-400">
 🔥
-</span>
 
 <p className="
 text-white
@@ -118,40 +174,44 @@ font-medium
 
 </div>
 
-
 <div
 className="
 grid
-grid-cols-8
-gap-2
+grid-cols-7
+gap-3
 "
 >
 
 {Array.from(
-{length:days},
+{length:daysInMonth},
 (_,i)=>{
 
-const dateObj=new Date(
-today.getFullYear(),
-today.getMonth(),
+const dateObj=
+new Date(
+year,
+month,
 i+1
 )
 
 const isActive=
 (dailyCount[
 formatDate(dateObj)
-] ||0)>=3
+]||0)>=3
 
 return(
 
 <div
 key={i}
 className={`
-w-10
-h-10
+h-11
 rounded-xl
 border
 transition-all
+flex
+flex-col
+items-center
+justify-center
+text-xs
 
 ${
 isActive
@@ -160,9 +220,6 @@ isActive
 bg-orange-500/15
 border-orange-500/40
 shadow-[0_0_12px_rgba(249,115,22,.4)]
-flex
-items-center
-justify-center
 `
 :
 `
@@ -173,7 +230,13 @@ border-zinc-800
 `}
 >
 
-{isActive && "🔥"}
+<span>{i+1}</span>
+
+{isActive&&
+<span className="text-[10px]">
+🔥
+</span>
+}
 
 </div>
 
