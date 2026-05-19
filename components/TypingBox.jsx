@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react"
 import { getRandomSnippet } from "@/lib/useSnippet";
 import ResultModal from "./ResultModal"
 import StreakCalendar from "./StreakCalendar" 
- export default function TypingBox({ roomId , socket,  participants,leaderboard}) {
+ export default function TypingBox({ roomId , socket,  participants}) {
   const hasSubmitted = useRef(false);
  
    const [rooms, setRooms] = useState([]);
