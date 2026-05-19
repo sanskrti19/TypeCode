@@ -280,7 +280,13 @@ id="typingInput" value={input} onChange={(e)=>setInput(e.target.value)} autoFocu
 </div>
 
 </div>
- <div className="w-full xl:w-[350px] space-y-6 xl:ml-16 2xl:ml-28 ">
+  <div className="
+w-full
+max-w-[320px]
+space-y-6
+mx-auto
+xl:mx-0
+">
       <div className="bg-zinc-900/70 rounded-2xl p-4 border border-zinc-800 backdrop-blur">
 <h3 className="mb-4 text-lg font-semibold">
 Participants
