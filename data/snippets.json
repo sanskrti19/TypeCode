@@ -99,6 +99,37 @@
     { "id": 97, "code": "let copy = { ...obj };" },
     { "id": 98, "code": "Object.keys(obj);" },
     { "id": 99, "code": "Object.values(obj);" },
-    { "id": 100, "code": "Object.entries(obj);" }
+    { "id": 100, "code": "Object.entries(obj);" },
+    { "id":101, "code":"const user = { name:'Alex', streak:12, rank:'Pro' };" },
+
+{ "id":102, "code":"const total = cart.reduce((sum,item)=>sum+item.price,0);" },
+
+{ "id":103, "code":"const activeUsers = users.filter(user=>user.isOnline);" },
+
+{ "id":104, "code":"const fetchData = async()=>await fetch('/api/profile');" },
+
+{ "id":105, "code":"const result = scores.sort((a,b)=>b.score-a.score);" },
+
+{ "id":106, "code":"const formatted = new Date().toLocaleDateString();" },
+
+{ "id":107, "code":"const copy={...profile,streak:profile.streak+1};" },
+
+{ "id":108, "code":"room.participants.map(user=>user.username);" },
+
+{ "id":109, "code":"const isWinner=wpm>100&&accuracy>95;" },
+
+{ "id":110, "code":"leaderboard.slice(0,5).forEach(player=>console.log(player));" },
+
+{ "id":111, "code":"const response=await axios.get('/api/leaderboard');" },
+
+{ "id":112, "code":"const pins = data.filter(pin=>pin.likes>100);" },
+
+{ "id":113, "code":"const merged=[...oldMessages,...newMessages];" },
+
+{ "id":114, "code":"socket.emit('submit-score',{username,wpm,accuracy});" },
+
+{ "id":115, "code":"participants.find(player=>player.id===hostId);" },
+
+{ "id":116, "code":"const average = nums.reduce((a,b)=>a+b)/nums.length;" }
      
   ]

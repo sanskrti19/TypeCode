@@ -228,7 +228,14 @@ localStorage.setItem("username",finalName);
     </div>
   </div>
  
-   <div className="max-w-7xl mx-auto grid xl:grid-cols-[minmax(0,1fr)_320px] gap-16 items-start "> 
+    <div className="
+max-w-7xl
+mx-auto
+grid
+xl:grid-cols-[1fr_320px]
+gap-8
+items-start
+">
      <div className="w-full flex flex-col items-center justify-center min-h-[70vh]">
       <div className="text-zinc-500 text-base md:text-xl mb-6">
               {timeLeft}s
@@ -240,7 +247,7 @@ localStorage.setItem("username",finalName);
 
 {text.split("").map((char,index)=>{
   let color="text-zinc-500";
-  if(index<input.length){ color=input[index]===char ? "text-white": "text-red-500";}
+  if(index<input.length){ color=input[index]===char ? "text-green-400": "text-red-500";}
   return(
 <span key={index} className={color}>
 {char}
