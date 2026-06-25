@@ -27,24 +27,28 @@ type Panel = "leaderboard" | "streaks" | "rooms" | "race" | null;
 
 interface TypingBoxProps {
   roomId?: string;
-  socket?: {
-    emit: (event: string, data?: unknown) => void;
-    on: (event: string, handler: (data: unknown) => void) => void;
-    off: (event: string, handler?: (data: unknown) => void) => void;
-  } | null;
   participants?: Participant[];
+  roomProgress?: RoomProgress;
+  emitProgress?: (data: {
+    wpm: number;
+    accuracy: number;
+    progress: number;
+    finished?: boolean;
+  }) => void;
+  emitScore?: (data: { wpm: number; accuracy: number }) => void;
 }
 
 export default function TypingBox({
   roomId,
-  socket,
   participants = [],
+  roomProgress = {},
+  emitProgress,
+  emitScore,
 }: TypingBoxProps) {
   const [rooms, setRooms] = useState<{ id: string; name: string }[]>([]);
   const [showNameInput, setShowNameInput] = useState(false);
   const [username, setUsername] = useState("");
   const [showResult, setShowResult] = useState(false);
-  const [roomProgress, setRoomProgress] = useState<RoomProgress>({});
   const [roomLink, setRoomLink] = useState("");
   const [activePanel, setActivePanel] = useState<Panel>(
     roomId ? "race" : null
@@ -75,16 +79,12 @@ export default function TypingBox({
         console.error("Failed to save score:", err);
       }
 
-      if (roomId && socket) {
-        socket.emit("submit-score", {
-          roomId,
-          username: name,
+      if (roomId && emitScore && emitProgress) {
+        emitScore({
           wpm: finalStats.wpm,
           accuracy: finalStats.accuracy,
         });
-        socket.emit("typing-progress", {
-          roomId,
-          username: name,
+        emitProgress({
           wpm: finalStats.wpm,
           accuracy: finalStats.accuracy,
           progress: 100,
@@ -92,7 +92,7 @@ export default function TypingBox({
         });
       }
     },
-    [roomId, socket, refresh]
+    [roomId, emitScore, emitProgress, refresh]
   );
 
   const {
@@ -130,31 +130,19 @@ export default function TypingBox({
   }, [roomId]);
 
   useEffect(() => {
-    if (!socket || !roomId) return;
-    const onProgress = (data: unknown) => {
-      setRoomProgress((data as RoomProgress) || {});
-    };
-    socket.on("room-progress", onProgress);
-    return () => socket.off("room-progress", onProgress);
-  }, [socket, roomId]);
-
-  useEffect(() => {
-    if (!socket || !roomId || finished) return;
+    if (!emitProgress || !roomId || finished) return;
     const now = Date.now();
     if (now - lastProgressEmit.current < 500) return;
     lastProgressEmit.current = now;
-    const name = localStorage.getItem("username");
-    const progress =
+    const progressPct =
       text.length > 0 ? Math.round((input.length / text.length) * 100) : 0;
-    socket.emit("typing-progress", {
-      roomId,
-      username: name,
+    emitProgress({
       wpm: stats.wpm,
       accuracy: stats.accuracy,
-      progress,
+      progress: progressPct,
       finished: false,
     });
-  }, [socket, roomId, input, text, stats, finished]);
+  }, [emitProgress, roomId, input, text, stats, finished]);
 
   const createRoom = async () => {
     if (!localStorage.getItem("username")) {
@@ -174,6 +162,15 @@ export default function TypingBox({
     }
     const res = await fetch("/api/rooms", { method: "POST" });
     const data = await res.json();
+    await fetch(`/api/rooms/${data.roomId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "join",
+        sessionId: crypto.randomUUID(),
+        username: storedName,
+      }),
+    });
     const stored = JSON.parse(localStorage.getItem("rooms") || "[]");
     const newRoom = { id: data.roomId, name: `${storedName}'s Room` };
     if (!stored.find((r: { id: string }) => r.id === data.roomId)) {
