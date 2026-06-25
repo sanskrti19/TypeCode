@@ -358,6 +358,20 @@ export default function TypingBox({
               </p>
             )}
             <TypingDisplay text={text} input={input} />
+            <div className="flex items-center justify-center gap-5 mt-6 text-[11px] uppercase tracking-widest text-text-dim">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-sm bg-success/40 border border-success" />
+                correct
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-sm bg-error/40 border border-error" />
+                wrong
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-sm bg-bg-elevated border border-border" />
+                upcoming
+              </span>
+            </div>
           </div>
         </main>
 

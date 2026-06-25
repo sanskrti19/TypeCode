@@ -15,7 +15,6 @@ export default function TypingDisplay({ text, input }: TypingDisplayProps) {
   }
 
   const words = text.split(" ");
-
   let charIndex = 0;
 
   return (
@@ -34,7 +33,13 @@ export default function TypingDisplay({ text, input }: TypingDisplayProps) {
             {word.split("").map((char, i) => {
               const idx = wordStart + i;
               return (
-                <Char key={i} char={char} index={idx} input={input} text={text} />
+                <Char
+                  key={i}
+                  char={char}
+                  index={idx}
+                  input={input}
+                  text={text}
+                />
               );
             })}
             {wordIdx < words.length - 1 && (
@@ -80,20 +85,35 @@ function Char({
   const isCurrent = index === input.length;
   const isTyped = index < input.length;
   const isCorrect = isTyped && input[index] === text[index];
-
-  let className = "text-text-sub";
-
-  if (isTyped) {
-    className = isCorrect ? "text-correct" : "text-incorrect";
-  }
+  const display = isSpace ? "\u00A0" : char;
 
   if (isCurrent) {
     return (
-      <span className="relative caret-before text-text-main">
-        {isSpace ? "\u00A0" : char}
+      <span className="relative caret-before text-text-sub bg-bg-elevated/60 rounded-sm">
+        {display}
       </span>
     );
   }
 
-  return <span className={className}>{isSpace ? "\u00A0" : char}</span>;
+  if (isTyped && isCorrect) {
+    return (
+      <span className="text-success bg-success/15 rounded-sm px-px">
+        {display}
+      </span>
+    );
+  }
+
+  if (isTyped && !isCorrect) {
+    const typed = isSpace ? "\u00A0" : input[index] || " ";
+    return (
+      <span
+        className="text-error bg-error/20 border-b-2 border-error rounded-sm px-px"
+        title={`expected "${char}"`}
+      >
+        {typed}
+      </span>
+    );
+  }
+
+  return <span className="text-text-sub">{display}</span>;
 }
