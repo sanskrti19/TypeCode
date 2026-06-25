@@ -1,31 +1,132 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #1a1b1e;
+  --bg-sub: #242528;
+  --bg-elevated: #2c2e33;
+  --text-main: #e8e6e3;
+  --text-sub: #646669;
+  --text-dim: #4a4d52;
+  --correct: #e8e6e3;
+  --incorrect: #e85656;
+  --caret: #f54e00;
+  --accent: #f54e00;
+  --accent-dim: #d04200;
+  --success: #7ec699;
+  --error: #e85656;
+  --border: #3a3c42;
+  --keyword: #7ec699;
+  --string: #e5c07b;
+  --number: #d19a66;
+  --panel-width: 340px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-bg-sub: var(--bg-sub);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-text-main: var(--text-main);
+  --color-text-sub: var(--text-sub);
+  --color-text-dim: var(--text-dim);
+  --color-correct: var(--correct);
+  --color-incorrect: var(--incorrect);
+  --color-caret: var(--caret);
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-border: var(--border);
+  --color-keyword: var(--keyword);
+  --color-string: var(--string);
+  --color-number: var(--number);
+
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
-html,
-body{
-overflow-x:hidden;
-width:100%;
+
+.font-mono {
+  font-family: var(--font-jetbrains-mono), "Fira Code", monospace;
+}
+
+@keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.caret-block {
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  background: var(--caret);
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  border-radius: 1px;
+  animation: caret-blink 1s ease-in-out infinite;
+}
+
+.caret-before {
+  position: relative;
+}
+
+.caret-before::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--caret);
+  border-radius: 1px;
+  animation: caret-blink 1s ease-in-out infinite;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.panel-slide {
+  animation: slide-in 0.2s ease-out;
 }

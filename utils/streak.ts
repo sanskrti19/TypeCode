@@ -1,66 +1,81 @@
-export function updateStreak() {
-  
-  const getLocalDate = () => {
-  const now = new Date()
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`
+export interface StreakData {
+  current: number;
+  lastActiveDate: string;
+  days: string[];
+  dailyCount: Record<string, number>;
 }
-const today = getLocalDate()
 
-  const stored = JSON.parse(localStorage.getItem("streak") || "{}")
+export function getLocalDate(date = new Date()): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
 
-  let data = {
+function getLocalDateOffset(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return getLocalDate(d);
+}
+
+function normalizeStreak(stored: Partial<StreakData>): StreakData {
+  const data: StreakData = {
     current: stored.current || 0,
     lastActiveDate: stored.lastActiveDate || "",
     days: stored.days || [],
-    dailyCount: stored.dailyCount || {}
+    dailyCount: stored.dailyCount || {},
+  };
+
+  if (!data.lastActiveDate) return data;
+
+  const today = getLocalDate();
+  const yesterday = getLocalDateOffset(-1);
+
+  if (data.lastActiveDate !== today && data.lastActiveDate !== yesterday) {
+    data.current = 0;
   }
 
- 
-  data.dailyCount[today] = (data.dailyCount[today] || 0) + 1
+  return data;
+}
 
-  console.log("Today's count:", data.dailyCount[today])
+export function updateStreak(): StreakData {
+  const today = getLocalDate();
+  const stored = JSON.parse(localStorage.getItem("streak") || "{}");
+  const data = normalizeStreak(stored);
 
- 
+  data.dailyCount[today] = (data.dailyCount[today] || 0) + 1;
+
   if (data.dailyCount[today] < 3) {
-    localStorage.setItem("streak", JSON.stringify(data))
-    return data
+    localStorage.setItem("streak", JSON.stringify(data));
+    window.dispatchEvent(new Event("streakUpdated"));
+    return data;
   }
- 
+
   if (data.lastActiveDate === today) {
-    localStorage.setItem("streak", JSON.stringify(data))
-    return data
+    localStorage.setItem("streak", JSON.stringify(data));
+    window.dispatchEvent(new Event("streakUpdated"));
+    return data;
   }
 
-  
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  const yesterdayStr = yesterday.toISOString().slice(0, 10)
+  const yesterday = getLocalDateOffset(-1);
 
-  if (data.lastActiveDate === yesterdayStr) {
-    data.current += 1
+  if (data.lastActiveDate === yesterday) {
+    data.current += 1;
   } else {
-    data.current = 1
+    data.current = 1;
   }
 
-  data.lastActiveDate = today
+  data.lastActiveDate = today;
 
-   
   if (!data.days.includes(today)) {
-    data.days.push(today)
+    data.days.push(today);
   }
 
-  localStorage.setItem("streak", JSON.stringify(data))
-  window.dispatchEvent(new Event("streakUpdated"))
-
-  return data
+  localStorage.setItem("streak", JSON.stringify(data));
+  window.dispatchEvent(new Event("streakUpdated"));
+  return data;
 }
-export function getStreak() {
-  const stored = JSON.parse(localStorage.getItem("streak") || "{}")
 
-  return {
-    current: stored.current || 0,
-    lastActiveDate: stored.lastActiveDate || "",
-    days: stored.days || [],
-    dailyCount: stored.dailyCount || {}
-  }
+export function getStreak(): StreakData {
+  const stored = JSON.parse(localStorage.getItem("streak") || "{}");
+  const data = normalizeStreak(stored);
+  localStorage.setItem("streak", JSON.stringify(data));
+  return data;
 }
