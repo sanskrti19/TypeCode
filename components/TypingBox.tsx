@@ -230,6 +230,7 @@ export default function TypingBox({
                 const finalName = username.trim();
                 if (!finalName) return;
                 localStorage.setItem("username", finalName);
+                setDisplayName(finalName);
                 setShowNameInput(false);
               }}
             >
